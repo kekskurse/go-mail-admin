@@ -53,6 +53,11 @@ func defineRouten() chi.Router {
 	r.Post("/api/v1/alias", addAlias)
 	r.Delete("/api/v1/alias", deleteAlias)
 	r.Put("/api/v1/alias", updateAlias)
+	r.Get("/api/v1/account", getAccounts)
+	r.Post("/api/v1/account", addAccount)
+	r.Delete("/api/v1/account", deleteAccount)
+	r.Put("/api/v1/account", updateAccount)
+	r.Put("/api/v1/account/password", updateAccountPassword)
 	return r
 }
 

@@ -48,4 +48,17 @@ Alias Action can be triggert by a http call to /api/v1/alias. Parameter can be t
 | DELETE | Delete a Domain, required Parameters: id |
 | PUT    | Apdate a Alias, required Parameters: source_username, source_domain, destination_username, destination_domain, enabled, id |
 
+### Account
+Alias Action can be triggert by a http call to /api/v1/account. Parameter can be transmitted as JSON-Body
+
+| Method | Notice |
+| ---    | ---    |
+| GET    | List all Accounts |
+| POST   | Create a new Account, required Parameters: username, domain, password, quota, enabled, sendonly |
+| DELETE | Delete a Account, required Parameters: id |
+| PUT    | Apdate a Alias, required Parameters: quota, enabled, sendonly, id |
+
+To update the Password make a http call to /api/v1/account/password with the Json-Body Parameter: id, password
+
 ## Frontend
+ToDo
