@@ -61,7 +61,14 @@ Alias Action can be triggert by a http call to /api/v1/account. Parameter can be
 To update the Password make a http call to /api/v1/account/password with the Json-Body Parameter: id, password
 
 ### TLSpolicies
-ToDo
+TLSPolicys can be changed by http call to /api/v1/tlspolicy
+
+| Method | Notice |
+| ---    | ---    |
+| GET    | List all Policys |
+| POST   | Create a new Policy, required Parameters: domain, policy, params |
+| DELETE | Delete a Policy, required Parameters: id |
+| PUT    | Apdate a Policy, required Parameters: domain, policy, params, id |
 
 ## Frontend
 ToDo
