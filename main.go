@@ -58,6 +58,11 @@ func defineRouten() chi.Router {
 	r.Delete("/api/v1/account", deleteAccount)
 	r.Put("/api/v1/account", updateAccount)
 	r.Put("/api/v1/account/password", updateAccountPassword)
+	r.Get("/api/v1/tlspolicy", getTLSPolicy)
+	r.Post("/api/v1/tlspolicy", addTLSPolicy)
+	r.Put("/api/v1/tlspolicy", updateTLSPolicy)
+	r.Delete("/api/v1/tlspolicy", deleteTLSPolicy)
+
 	return r
 }
 
