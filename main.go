@@ -32,7 +32,7 @@ func connectToDb() {
 	fmt.Println("Ping OK")
 }
 
-func defineRouten() chi.Router {
+func defineRouten() chi.Router { //TODO: einheitliche Sprache
 	r := chi.NewRouter()
 
 	cors := cors.New(cors.Options{

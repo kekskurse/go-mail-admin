@@ -27,8 +27,13 @@ go build ./main.go
 ```
 
 # Usage
-## API
+## Run
+Install or Compile the package, in both case you should have a go-mail-admin file which can be executed. To run the Admin-GUI call it
 
+```
+./go-mail-admin 
+```
+## API
 ### Domains
 Domain Action can be triggert by a http call to /api/v1/domain. Parameter can be transmitted as JSON-Body
 
