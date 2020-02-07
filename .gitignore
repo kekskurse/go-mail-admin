@@ -1,3 +1,5 @@
 gin-bin
 .vscode/
 go-mail-admin
+.idea/
+template

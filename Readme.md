@@ -27,6 +27,15 @@ go build ./main.go
 ```
 
 # Usage
+## Config
+The script can be config with environment Variables. The following Settings are possible:
+
+| Key | Required | Notice |
+| --- | ---      | --- |
+| GOMAILADMIN_DB | Yes | Database connection string like 'username:password@tcp(127.0.0.1:3306)/database' |
+| GOMAILADMIN_APIKEY | No | API Key for HTTP-Basic-Auth (just use if APISECRET  is set too)  |
+| GOMAILADMIN_APISECRET | No | API Secret for HTTP-Basic-Auth (just use if APIKEY is set too) |
+
 ## Run
 Install or Compile the package, in both case you should have a go-mail-admin file which can be executed. To run the Admin-GUI call it
 
