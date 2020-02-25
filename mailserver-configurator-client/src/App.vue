@@ -1,6 +1,6 @@
 <template>
 
-  <div id="app">
+  <v-app>
     <Topbar></Topbar>
     <v-content>
 
@@ -9,7 +9,7 @@
 
     </v-content>
 
-  </div>
+  </v-app>
 </template>
 <script>
   import Topbar from "./components/Topbar";

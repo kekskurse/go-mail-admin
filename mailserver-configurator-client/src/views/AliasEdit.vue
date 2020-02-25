@@ -9,8 +9,11 @@
                         placeholder="Source Username"
                         label="Source Username"
                         ></v-text-field>
-                    <label>Source Domain</label>
-                    <v-select2 v-model="alias.source_domain" data-app="true" :options="domainNames" label="Destination-Domain"></v-select2>
+                    <v-select
+                            :items="domainNames"
+                            label="Source Domain"
+                            v-model="alias.source_domain"
+                    ></v-select>
                     <v-text-field
                             v-model="alias.destination_username"
                             placeholder="Source Username"
@@ -82,7 +85,8 @@
         },
         data: () => ({
             alias: {"enabled": true},
-            domainNames: []
+            domainNames: [],
+            sample: ["abc", "asd", "sdf"]
         }),
     }
 </script>

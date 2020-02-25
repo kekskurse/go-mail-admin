@@ -6,8 +6,7 @@
                 <v-card-text>
                     <span v-if="!account.id">
                         <v-text-field v-model="account.username" label="Username" placeholder="Username"></v-text-field>
-                        <label>Domain</label>
-                         <v-select2 v-model="account.domain" data-app="true" :options="domainNames" label="Destination-Domain"></v-select2>
+                         <v-select v-model="account.domain" data-app="true" :items="domainNames" label="Destination-Domain"></v-select>
                         <v-text-field v-model="account.password" label="Password" type="password" placeholder="Password"></v-text-field>
                     </span>
                     <v-text-field v-model="account.quota" label="Quota" placeholder="Quota"></v-text-field>

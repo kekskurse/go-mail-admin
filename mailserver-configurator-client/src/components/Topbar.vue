@@ -1,8 +1,8 @@
 <template>
     <div>
         <v-app-bar
-                color="deep-purple accent-4"
-                dense
+                color="#212121"
+
                 dark
         >
 
