@@ -89,7 +89,14 @@ There is a VueJS Frontend to see and configure your Mailserver. You can access i
 ![Domainlist](statik/aliases.png)
 *Aliases Edit*
 ![Domainlist](statik/aliases-edit.png)
-
+*Accounts*
+![Domainlist](statik/accounts.png)
+*Accounts Edit*
+![Domainlist](statik/account-edit.png)
+*TLS Policy*
+![Domainlist](statik/tlspolicy.png)
+*TLS Policy Edit*
+![Domainlist](statik/tlspolicy-edit.png)
 
 # Dev
 ## Project Sturctur
