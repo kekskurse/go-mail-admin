@@ -13,7 +13,9 @@
                     <v-text-field v-model="account.quota" label="Quota" placeholder="Quota"></v-text-field>
                     <v-checkbox v-model="account.enabled" label="Enabled"></v-checkbox>
                     <v-checkbox v-model="account.sendonly" label="Send Only"></v-checkbox>
-                    <v-btn @click="saveAlias">Save Account</v-btn>
+                    <span style="background-color:#BBDEFB; margin-left: 10px; border-radius: 5px; padding-top: 10px;padding-bottom:8px;">
+                        <v-btn @click="saveAlias" icon><v-icon>mdi-content-save</v-icon></v-btn>
+                    </span>
                 </v-card-text>
             </v-card>
         </v-container>
@@ -48,6 +50,7 @@
                     Client.saveAccount(this.account).then(() => {
                         this.getAccounts();
                         this.$swal("Account saved");
+                        this.$router.push("/account")
                     })
                 } else {
                     Client.createAccount(this.account).then(() => {

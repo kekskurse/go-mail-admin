@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container>
-            <v-card>
+            <v-card style="padding-bottom: 10px;">
                 <v-card-title>
                     Accounts
                     <v-spacer></v-spacer>
@@ -15,6 +15,11 @@
 
                     ></v-text-field>
                 </v-card-title>
+                <span style="background-color:#BBDEFB; margin-left: 10px; border-radius: 5px; padding-top: 10px;padding-bottom:8px;">
+                    <v-btn to="/account/new" icon><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
+                    <v-btn @click="deleteAccount()" v-if="selected[0]" icon><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+                    <v-btn @click="editAlias()" v-if="selected[0]" icon><v-icon>mdi-circle-edit-outline</v-icon></v-btn>
+                </span>
                 <v-data-table
                         :headers="headers"
                         :items="accounts"
@@ -23,9 +28,11 @@
                         v-model="selected"
                         show-select
                 ></v-data-table>
-                <v-btn @click="deleteAccount()" v-if="selected[0]">Remove selected Account</v-btn>
-                <v-btn @click="editAlias()" v-if="selected[0]">Edit Account</v-btn>
-                <v-btn to="/account/new">New Account</v-btn><br><br>
+                <span style="background-color:#BBDEFB; margin-left: 10px; border-radius: 5px; padding-top: 10px;padding-bottom:8px;">
+                    <v-btn to="/account/new" icon><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
+                    <v-btn @click="deleteAccount()" v-if="selected[0]" icon><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+                    <v-btn @click="editAlias()" v-if="selected[0]" icon><v-icon>mdi-circle-edit-outline</v-icon></v-btn>
+                </span>
             </v-card>
 
 

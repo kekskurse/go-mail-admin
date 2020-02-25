@@ -12,6 +12,9 @@
 
             <v-spacer></v-spacer>
 
+            <v-btn to="/" icon>
+                <v-icon>mdi-view-dashboard-variant</v-icon>
+            </v-btn>
             <v-btn to="/domains" icon>
                 <v-icon>mdi-dns</v-icon>
             </v-btn>

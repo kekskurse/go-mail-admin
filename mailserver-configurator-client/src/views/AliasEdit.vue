@@ -22,7 +22,10 @@
                             label="Destination Domain"
                     ></v-text-field>
                     <v-checkbox v-model="alias.enabled" label="Enabled"></v-checkbox>
-                    <v-btn @click="saveAlias">Save Alias</v-btn>
+                    <span style="background-color:#BBDEFB; margin-left: 10px; border-radius: 5px; padding-top: 10px;padding-bottom:8px;">
+                        <v-btn @click="saveAlias" icon><v-icon>mdi-content-save</v-icon></v-btn>
+                    </span>
+
                 </v-card-text>
             </v-card>
         </v-container>
@@ -57,6 +60,7 @@
                     Client.saveAlias(this.alias).then(() => {
                         this.getAliases();
                         this.$swal("Alias saved");
+                        this.$router.push("/alias")
                     })
                 } else {
                     Client.createAlias(this.alias).then(() => {
