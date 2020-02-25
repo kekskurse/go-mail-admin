@@ -34,6 +34,13 @@ The script can be config with environment Variables. The following Settings are 
 ### Domains
 Domain Action can be triggert by a http call to /api/v1/domain. Parameter can be transmitted as JSON-Body
 
+```
+{
+  "id": 1,
+  "domain": "example.com"
+}
+```
+
 | Method | Notice |
 | ---    | ---    |
 | GET    | List all Domains |
@@ -66,6 +73,18 @@ Alias Action can be triggert by a http call to /api/v1/alias. Parameter can be t
 ### Account
 Alias Action can be triggert by a http call to /api/v1/account. Parameter can be transmitted as JSON-Body
 
+```
+{
+  "id": 1,
+  "username": "admin",
+  "domain": "example.com",
+  "quota": 3000,
+  "enabled": true,
+  "sendonly": false,
+  "print": "admin@example.com" # Just to show it in a gui, based on username@domain
+}
+```
+
 | Method | Notice |
 | ---    | ---    |
 | GET    | List all Accounts |
@@ -77,6 +96,15 @@ To update the Password make a http call to /api/v1/account/password with the Jso
 
 ### TLSpolicies
 TLSPolicys can be changed by http call to /api/v1/tlspolicy
+
+```
+{
+  "id": 1,
+  "domain": "example.com",
+  "policy": "dane",
+  "params": "match=*.example.com"
+}
+```
 
 | Method | Notice |
 | ---    | ---    |
