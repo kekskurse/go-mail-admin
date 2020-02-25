@@ -3,6 +3,8 @@ HTTP-Interface with a small GUI for a Mailserver based on the [Tutorial "Own mai
 The Project connect to the MYSQL-Database to read and write the config. 
 
 You just need to download one binary file to the server and run it, no other dependencies. Anyway you may want to add an nginx with SSL in front of it, or make it just available in a VPN.
+
+The HTTP-Interface don't validate your data, its just another way to access your database.
 # Installation
 Download the last binary from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) to your Ubuntu/Debian Mailserver. 
 
