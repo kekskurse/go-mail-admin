@@ -1,9 +1,59 @@
 <template>
   <div class="container">
-    <v-card>
-      <v-card-title>Go Mail Admin</v-card-title>
-      <v-card-text>Mail Server Admin GUI</v-card-text>
-    </v-card>
+    <v-row no-gutters>
+      <v-col cols="12" sm="6">
+        <v-card style="margin-right: 10px; height: 100%;">
+          <v-card-title>Go Mail Admin</v-card-title>
+          <v-card-text>
+            Mail Server Admin GUI<br><br>
+            <b>Fast Access</b><br>
+            <v-list-item-group v-model="item" color="primary">
+              <v-list-item to="/account/new">
+                <v-list-item-content>
+                  <v-list-item-title>New Account</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item to="/alias/new">
+                <v-list-item-content>
+                  <v-list-item-title>New Aliases</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item href="https://github.com/kekskurse/go-mail-admin/issues">
+                <v-list-item-content>
+                  <v-list-item-title>Report a Issue</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="2">
+        <v-card style="margin-right: 10px;">
+          <v-card-title>Domains</v-card-title>
+          <v-card-text>
+            <DomainChart></DomainChart>
+            </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="2">
+        <v-card style="margin-right: 10px;">
+          <v-card-title>Aliases</v-card-title>
+          <v-card-text>
+            <AliasChart></AliasChart>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="2">
+        <v-card style="margin-right: 10px;">
+          <v-card-title>Accounts</v-card-title>
+          <v-card-text>
+            <AccountChart></AccountChart>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
     <v-card style="margin-top: 10px;">
       <v-card-title>Icons</v-card-title>
       <v-card-text>
@@ -58,12 +108,15 @@
 
 <script>
 // @ is an alias to /src
-
-
+import DomainChart from "../components/DomainChart";
+import AliasChart from "../components/AliasChart";
+import AccountChart from "../components/AccountChart";
 export default {
   name: 'Home',
   components: {
-
+    DomainChart,
+    AliasChart,
+    AccountChart
   }
 }
 </script>
