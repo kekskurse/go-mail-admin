@@ -98,14 +98,9 @@
                     value: 'id'
                 },
                 {
-                    text: 'Source Username',
+                    text: 'E-Mail',
                     sortable: true,
-                    value: 'username'
-                },
-                {
-                    text: 'Source Domain',
-                    sortable: true,
-                    value: 'domain'
+                    value: 'print'
                 },
                 {
                     text: 'Quota (MB)',
