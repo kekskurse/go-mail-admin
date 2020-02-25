@@ -30,13 +30,6 @@ The script can be config with environment Variables. The following Settings are 
 | GOMAILADMIN_APIKEY | No | API Key for HTTP-Basic-Auth (just use if APISECRET  is set too)  |
 | GOMAILADMIN_APISECRET | No | API Secret for HTTP-Basic-Auth (just use if APIKEY is set too) |
 
-## Run
-Install or Compile the package, in both case you should have a go-mail-admin file which can be executed. To run the Admin-GUI call it
-
-```
-./go-mail-admin 
-```
-
 ## API
 ### Domains
 Domain Action can be triggert by a http call to /api/v1/domain. Parameter can be transmitted as JSON-Body
@@ -99,9 +92,19 @@ There is a VueJS Frontend to see and configure your Mailserver. You can access i
 ![Domainlist](statik/tlspolicy-edit.png)
 
 # Dev
-## Project Sturctur
+## Project structure
+In the Folder "mailserver-configurator-interface" is the GO-Project which provides a HTTP-API for the Mailserver-Config, the "mailserver-configurator-client" is a VUEJS interface for that HTTP-API.
+
 ## Compile
-Make sure you have all dependencies
+### Mailserver-Configurator-Client
+Go in the Project folder and build the Vue.js project
+
+```
+npm install
+npm run build
+```
+### Mailserver-Configurator-Interface
+Go in the Project folder. Make sure you have all dependencies
 
 ```
 go get github.com/go-sql-driver/mysql
@@ -111,10 +114,30 @@ go get github.com/go-chi/chi
 go get github.com/rakyll/statik
 ```
 
-Create a public folder and add a frontend (or leave it empty)
+Create a "public" folder and copy the dist folder from the Client into it
 
-Build the project
 ```
-statik -src=./public
-go build ./main.go
+mkdir public
+cd public
+cp -r ../../mailserver-configurator-client/dist/* ./
+cd ..
 ```
+
+Include the Static files (Vue-App) to Go to make it available in the binary.
+```
+statik -f -src=./public
+```
+oder
+```
+~/go/bin/statik -f -src=./public
+```
+Than build the GO Project
+```
+go build ./
+```
+
+In the build-with-gui.sh in the project root is a shell script to build the client and interface. You can call it with a name
+```
+./build-with-gui.sh dev
+```
+will create a go-mail-admin-with-gui-dev in the project root.
