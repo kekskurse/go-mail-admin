@@ -94,24 +94,14 @@
                     value: 'id'
                 },
                 {
-                    text: 'Source Username',
+                    text: 'Source',
                     sortable: true,
-                    value: 'source_username'
+                    value: 'print_source'
                 },
                 {
-                    text: 'Source Domain',
+                    text: 'Destination',
                     sortable: true,
-                    value: 'source_domain'
-                },
-                {
-                    text: 'Destination Username',
-                    sortable: true,
-                    value: 'destination_username'
-                },
-                {
-                    text: 'Destination Domain',
-                    sortable: true,
-                    value: 'destination_domain'
+                    value: 'print_destination'
                 },
                 {
                     text: 'Enabled',

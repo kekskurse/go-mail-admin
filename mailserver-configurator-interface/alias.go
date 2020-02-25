@@ -17,6 +17,8 @@ type Alias struct {
 	DestinationUsername string `json:"destination_username"`
 	DestinationDomain   string `json:"destination_domain"`
 	Enabled             bool   `json:"enabled"`
+	PrintSource string `json:"print_source"`
+	PrintDestination string `json:"print_destination"`
 }
 
 func getAliases(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +37,8 @@ func getAliases(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		alias.PrintSource = alias.SourceUsername + "@" + alias.SourceDomain
+		alias.PrintDestination = alias.DestinationUsername + "@" + alias.DestinationDomain
 		aliases = append(aliases, alias)
 	}
 	ren := render.New()

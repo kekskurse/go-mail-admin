@@ -52,6 +52,7 @@ type Account struct {
 	Quota    int    `json:"quota"`
 	Enabled  bool   `json:"enabled"`
 	SendOnly bool   `json:"sendonly"`
+	Print string `json:"print"`
 }
 
 // AccountWithPassword from MYSQL
@@ -63,6 +64,7 @@ type AccountWithPassword struct {
 	Quota    int    `json:"quota"`
 	Enabled  bool   `json:"enabled"`
 	SendOnly bool   `json:"sendonly"`
+	Print string `json:"print"`
 }
 
 func getAccounts(w http.ResponseWriter, r *http.Request) {
@@ -81,6 +83,7 @@ func getAccounts(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		account.Print = account.Username + "@" + account.Domain
 		accounts = append(accounts, account)
 	}
 	ren := render.New()

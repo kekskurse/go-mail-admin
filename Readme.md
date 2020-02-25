@@ -43,6 +43,19 @@ Domain Action can be triggert by a http call to /api/v1/domain. Parameter can be
 ### Aliases
 Alias Action can be triggert by a http call to /api/v1/alias. Parameter can be transmitted as JSON-Body
 
+```
+{
+  "id": 2,
+  "source_username": "admin",
+  "source_domain": "example.com",
+  "destination_username": "test",
+  "destination_domain": "example.com",
+  "enabled": true,
+  "print_source": "admin@example.com", # Just to show it in a gui based on source_username@source_domain
+  "print_destination": "test@example.com" # Just to show it in a gui based on destination_username@destination_domain
+}
+```
+
 | Method | Notice |
 | ---    | ---    |
 | GET    | List all Aliases |
