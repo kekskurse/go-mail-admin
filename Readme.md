@@ -84,7 +84,7 @@ There is a VueJS Frontend to see and configure your Mailserver. You can access i
 
 ### Screenshots
 
-![Domainlist](statik/domain.png)
+![Domainlist](statik/domains.png)
 
 # Dev
 ## Project Sturctur
