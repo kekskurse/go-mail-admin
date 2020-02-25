@@ -1,12 +1,10 @@
-Still in development!!11einzelf!11!!
-
 # Go-Mail-Admin
-I want to admin my mailserver with a small webgui, I want a HTTP-API to manage some Domains from another Software, I don't want to install docker/java/php/apache/nginx/anything on the Server for that.
+HTTP-Interface with a small GUI for a Mailserver based on the [Tutorial "Own mail server based on Dovecot, Postfix, MySQL, Rspamd and Debian 9 Stretch"](https://thomas-leister.de/en/mailserver-debian-stretch/).
+The Project connect to the MYSQL-Database to read and write the config. 
 
-I want to learn go, I don't need validation (its a admin api, i have validation in other Software which uses this API)
-
+You just need to download one binary file to the server and run it, no other dependencies. Anyway you may want to add an nginx with SSL in front of it, or make it just available in a VPN.
 # Installation
-Download the last binary from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) to your ubuntu/debian Mailserver. 
+Download the last binary from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) to your Ubuntu/Debian Mailserver. 
 
 Set the Enviroment-Varieables to configure the Go-Mail-Admin
 ```
