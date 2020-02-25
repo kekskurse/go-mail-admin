@@ -117,6 +117,8 @@ TLSPolicys can be changed by http call to /api/v1/tlspolicy
 There is a VueJS Frontend to see and configure your Mailserver. You can access it by open http://yourmailserver.de:3001, if you set an API Key and Secret you need to performe a HTTP-Basic-Auth.
 
 ### Screenshots
+*Dashboard*
+![Dashboard](statik/dashboard.png)
 *Domainliste*
 ![Domainlist](statik/domains.png)
 *Aliases*
