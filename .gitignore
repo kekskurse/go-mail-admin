@@ -3,3 +3,5 @@ gin-bin
 go-mail-admin
 .idea/
 template
+statik/
+public/

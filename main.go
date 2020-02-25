@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/99designs/basicauth-go"
 	"github.com/go-chi/chi/middleware"
+	"github.com/rakyll/statik/fs"
 	"log"
 	"net/http"
 	"os"
@@ -12,6 +13,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 
+	_ "./statik"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -111,6 +113,14 @@ func defineRouter() chi.Router {
 	r.Delete("/api/v1/tlspolicy", deleteTLSPolicy)
 	r.Get("/ping", http_ping)
 	r.Get("/status", http_status)
+
+	//Static files
+	statikFS, err := fs.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	r.Handle("/*", http.StripPrefix("", http.FileServer(statikFS)))
 
 	return r
 }

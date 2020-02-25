@@ -19,10 +19,14 @@ go get github.com/go-sql-driver/mysql
 go get github.com/go-chi/cors
 go get gopkg.in/unrolled/render.v1
 go get github.com/go-chi/chi
+go get github.com/rakyll/statik
 ```
 
-Build the file
+Create a public folder and add a frontend (or leave it empty)
+
+Build the project
 ```
+statik -src=./public
 go build ./main.go
 ```
 
@@ -85,4 +89,5 @@ TLSPolicys can be changed by http call to /api/v1/tlspolicy
 | PUT    | Apdate a Policy, required Parameters: domain, policy, params, id |
 
 ## Frontend
-ToDo
+There is a first hack of a VueJS gui in [this repo](https://github.com/kekskurse/go-mail-admin-gui). 
+The GUI is part of the go binary. To add another GUI to the Frontend you need to build the go-binary yourself and change the content of the public folder.
