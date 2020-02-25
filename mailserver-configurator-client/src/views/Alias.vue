@@ -15,15 +15,14 @@
                 </v-card-title>
                 <span style="background-color:#BBDEFB; margin-left: 10px; border-radius: 5px; padding-top: 10px;padding-bottom:8px;">
                     <v-btn to="/alias/new" icon><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
-                    <v-btn @click="removeAlias()" v-if="selected[0]" icon><v-icon>mdi-close-circle-outline</v-icon></v-btn>
-                    <v-btn @click="editAlias()" v-if="selected[0]" icon><v-icon>mdi-circle-edit-outline</v-icon></v-btn>
+                    <v-btn @click="removeAlias()" v-if="selected.length > 0" icon><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+                    <v-btn @click="editAlias()" v-if="selected.length == 1" icon><v-icon>mdi-circle-edit-outline</v-icon></v-btn>
                 </span>
 
                 <v-data-table
                         :headers="headers"
                         :items="aliases"
                         :search="search"
-                        :single-select=true
                         v-model="selected"
                         show-select
                 >
@@ -34,8 +33,8 @@
                 </v-data-table>
                 <span style="background-color:#BBDEFB; margin-left: 10px; border-radius: 5px; padding-top: 10px;padding-bottom:8px;">
                     <v-btn to="/alias/new" icon><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
-                    <v-btn @click="removeAlias()" v-if="selected[0]" icon><v-icon>mdi-close-circle-outline</v-icon></v-btn>
-                    <v-btn @click="editAlias()" v-if="selected[0]" icon><v-icon>mdi-circle-edit-outline</v-icon></v-btn>
+                    <v-btn @click="removeAlias()" v-if="selected.length > 0" icon><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+                    <v-btn @click="editAlias()" v-if="selected.length == 1" icon><v-icon>mdi-circle-edit-outline</v-icon></v-btn>
                 </span>
 
             </v-card>
@@ -71,9 +70,11 @@
                     showCancelButton: true,
                 }).then((res) => {
                     if(res.value) {
-                        Client.removeAlias(this.selected[0].id).then(() => {
-                            this.getAliases();
-                        })
+                        for(var i = 0; i < this.selected.length; i++) {
+                            Client.removeAlias(this.selected[i].id).then(() => {
+                                this.getAliases();
+                            })
+                        }
                     }
                 });
             }
