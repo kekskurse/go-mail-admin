@@ -26,7 +26,12 @@
                         :single-select=true
                         v-model="selected"
                         show-select
-                ></v-data-table>
+                >
+                    <template v-slot:item.enabled="{ item }">
+                        <v-chip color="green" v-if="item.enabled">Yes</v-chip>
+                        <v-chip color="red" v-if="!item.enabled">No</v-chip>
+                    </template>
+                </v-data-table>
                 <span style="background-color:#BBDEFB; margin-left: 10px; border-radius: 5px; padding-top: 10px;padding-bottom:8px;">
                     <v-btn to="/alias/new" icon><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
                     <v-btn @click="removeAlias()" v-if="selected[0]" icon><v-icon>mdi-close-circle-outline</v-icon></v-btn>
