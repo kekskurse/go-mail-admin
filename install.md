@@ -43,3 +43,5 @@ Run the following command to enable and start the service. After it the service 
 systemctl enable go-mail-admin.service
 systemctl start go-mail-admin.service
 ```
+
+After that you can call the gui via http at http://servername:3001

@@ -23,6 +23,8 @@ After it you can start the Go-Mail-Admin with the following command
 ./go-mail-admin-with-gui-<VERSION>
 ```
 
+After that you can call the gui via http at http://servername:3001
+
 # Usage
 ## Config
 The script can be config with environment Variables. The following Settings are possible:
