@@ -6,6 +6,9 @@ You just need to download one binary file to the server and run it, no other dep
 
 The HTTP-Interface don't validate your data, its just another way to access your database.
 # Installation
+
+Note: To install the go-mail-admin that it runs always and add it to the autostart there is a a [step by step howto](https://github.com/kekskurse/go-mail-admin/blob/master/install.md).
+
 Download the last binary from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) to your Ubuntu/Debian Mailserver. 
 
 Set the Enviroment-Varieables to configure the Go-Mail-Admin
