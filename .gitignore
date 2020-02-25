@@ -1,7 +1,4 @@
 gin-bin
 .vscode/
-go-mail-admin
+go-mail-admin*
 .idea/
-template
-statik/
-public/

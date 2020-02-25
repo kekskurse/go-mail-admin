@@ -7,9 +7,17 @@ I want to learn go, I don't need validation (its a admin api, i have validation 
 
 
 # Installation
-1) Download the go-mail-admin file fore your Systems (comming later)
-2) ???
+1) Download the go-mail-admin file fore your Systems from the Release page
+2) Setup the enviroment varieablen 
+```
+export GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail"
+export GOMAILADMIN_APIKEY=abc
+export GOMAILADMIN_APISECRET=abc
+```
 3) Run it
+```
+./go-mail-admin-with-gui-<VERSION>
+```
 
 ## Compile
 Make sure you have all dependencies
