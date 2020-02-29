@@ -1,33 +1,33 @@
 # Go-Mail-Admin
-HTTP-Interface with a small GUI for a Mailserver based on the [Tutorial "Own mail server based on Dovecot, Postfix, MySQL, Rspamd and Debian 9 Stretch"](https://thomas-leister.de/en/mailserver-debian-stretch/).
-The Project connect to the MYSQL-Database to read and write the config. 
+HTTP interface with a small GUI for a mailserver based on the [Tutorial "Own mail server based on Dovecot, Postfix, MySQL, Rspamd and Debian 9 Stretch"](https://thomas-leister.de/en/mailserver-debian-stretch/).
+The project will connect to the MYSQL database to read and write the config. 
 
-You just need to download one binary file to the server and run it, no other dependencies. Anyway you may want to add an nginx with SSL in front of it, or make it just available in a VPN.
+You just need to download one binary file to the server and run it, no other dependencies. However, you may want to add an nginx with SSL in front of it, or make it only available via VPN.
 
-The HTTP-Interface don't validate your data, its just another way to access your database.
+The HTTP interface doesn't validate your data, it's just another way to access your database.
 # Installation
 
-Note: To install the go-mail-admin that it runs always and add it to the autostart there is a a [step by step howto](https://github.com/kekskurse/go-mail-admin/blob/master/install.md).
+Note: For installing the Go-Mail-Admin so it's always running and for adding it to the autostart there is a [step by step howto](https://github.com/kekskurse/go-mail-admin/blob/master/install.md).
 
-Download the last binary from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) to your Ubuntu/Debian Mailserver. 
+Download the last binary from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) to your Ubuntu/Debian mailserver. 
 
-Set the Enviroment-Varieables to configure the Go-Mail-Admin
+Set the environment variables to configure the Go-Mail-Admin
 ```
 export GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail"
 export GOMAILADMIN_APIKEY=abc
 export GOMAILADMIN_APISECRET=abc
 ```
 
-After it you can start the Go-Mail-Admin with the following command
+Then you can start the Go-Mail-Admin with the following command
 ```
 ./go-mail-admin-with-gui-<VERSION>
 ```
 
-After that you can call the gui via http at http://servername:3001
+After that you can open the gui via http at http://servername:3001
 
 # Usage
 ## Config
-The script can be config with environment Variables. The following Settings are possible:
+The script can be configurated with environment variables. The following settings are possible:
 
 | Key | Required | Notice |
 | --- | ---      | --- |
@@ -37,7 +37,7 @@ The script can be config with environment Variables. The following Settings are 
 
 ## API
 ### Domains
-Domain Action can be triggert by a http call to /api/v1/domain. Parameter can be transmitted as JSON-Body
+Domain Action can be triggered by a http call to /api/v1/domain. Parameter can be transmitted as JSON body:
 
 ```
 {
@@ -53,7 +53,7 @@ Domain Action can be triggert by a http call to /api/v1/domain. Parameter can be
 | DELETE | Delete a Domain, required Parameters: domain |
 
 ### Aliases
-Alias Action can be triggert by a http call to /api/v1/alias. Parameter can be transmitted as JSON-Body
+Alias actions can be triggered through a http call to /api/v1/alias. Parameter can be transmitted as JSON body:
 
 ```
 {
@@ -76,7 +76,7 @@ Alias Action can be triggert by a http call to /api/v1/alias. Parameter can be t
 | PUT    | Apdate a Alias, required Parameters: source_username, source_domain, destination_username, destination_domain, enabled, id |
 
 ### Account
-Alias Action can be triggert by a http call to /api/v1/account. Parameter can be transmitted as JSON-Body
+Account actions can be triggered through a http call to /api/v1/account. Parameter can be transmitted as JSON body:
 
 ```
 {
@@ -97,10 +97,10 @@ Alias Action can be triggert by a http call to /api/v1/account. Parameter can be
 | DELETE | Delete a Account, required Parameters: id |
 | PUT    | Apdate a Alias, required Parameters: quota, enabled, sendonly, id |
 
-To update the Password make a http call to /api/v1/account/password with the Json-Body Parameter: id, password
+To update the password make a http call to /api/v1/account/password with the Json-Body Parameter: id, password
 
 ### TLSpolicies
-TLSPolicys can be changed by http call to /api/v1/tlspolicy
+TLS policies can be changed through a http call to /api/v1/tlspolicy
 
 ```
 {
@@ -119,12 +119,12 @@ TLSPolicys can be changed by http call to /api/v1/tlspolicy
 | PUT    | Apdate a Policy, required Parameters: domain, policy, params, id |
 
 ## Frontend
-There is a VueJS Frontend to see and configure your Mailserver. You can access it by open http://yourmailserver.de:3001, if you set an API Key and Secret you need to performe a HTTP-Basic-Auth.
+There is a VueJS frontend you can use to see and configure your mailserver. You can access it by opening http://yourmailserver.de:3001, if you set an API key and secret you need to performe a HTTP Basic Auth.
 
 ### Screenshots
 *Dashboard*
 ![Dashboard](statik/dashboard.png)
-*Domainliste*
+*Domain List*
 ![Domainlist](statik/domains.png)
 *Aliases*
 ![Domainlist](statik/aliases.png)
@@ -141,18 +141,18 @@ There is a VueJS Frontend to see and configure your Mailserver. You can access i
 
 # Dev
 ## Project structure
-In the Folder "mailserver-configurator-interface" is the GO-Project which provides a HTTP-API for the Mailserver-Config, the "mailserver-configurator-client" is a VUEJS interface for that HTTP-API.
+In the folder "mailserver-configurator-interface" you'll find the GO project which provides an HTTP API for the mailserver config. The "mailserver-configurator-client" is a VUEJS interface for that HTTP API.
 
 ## Compile
 ### Mailserver-Configurator-Client
-Go in the Project folder and build the Vue.js project
+Open the project folder and build the Vue.js project
 
 ```
 npm install
 npm run build
 ```
 ### Mailserver-Configurator-Interface
-Go in the Project folder. Make sure you have all dependencies
+Open the project folder. Make sure you have all dependencies
 
 ```
 go get github.com/go-sql-driver/mysql
@@ -162,7 +162,7 @@ go get github.com/go-chi/chi
 go get github.com/rakyll/statik
 ```
 
-Create a "public" folder and copy the dist folder from the Client into it
+Create a "public" folder and copy the dist folder from the client into it
 
 ```
 mkdir public
@@ -171,20 +171,20 @@ cp -r ../../mailserver-configurator-client/dist/* ./
 cd ..
 ```
 
-Include the Static files (Vue-App) to Go to make it available in the binary.
+Copy the static files (Vue app) to GO to make it available in the binary.
 ```
 statik -f -src=./public
 ```
-oder
+or
 ```
 ~/go/bin/statik -f -src=./public
 ```
-Than build the GO Project
+Then build the GO project
 ```
 go build ./
 ```
 
-In the build-with-gui.sh in the project root is a shell script to build the client and interface. You can call it with a name
+In the build-with-gui.sh in the project root there's a shell script to build the client and interface. You can call it with a name:
 ```
 ./build-with-gui.sh dev
 ```
