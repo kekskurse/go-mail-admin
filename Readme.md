@@ -2,7 +2,7 @@
 HTTP interface with a small GUI for a mailserver based on the [Tutorial "Own mail server based on Dovecot, Postfix, MySQL, Rspamd and Debian 9 Stretch"](https://thomas-leister.de/en/mailserver-debian-stretch/).
 The project will connect to the MYSQL database to read and write the config. 
 
-You just need to download one binary file to the server and run it, no other dependencies. However, you may want to add an nginx with SSL in front of it, or make it only available via VPN.
+You just need to download one binary file to the server and run it, no other dependencies. However, you may want to add an nginx with SSL in front of it, or only make it available via VPN.
 
 The HTTP interface doesn't validate your data, it's just another way to access your database.
 # Installation
@@ -18,12 +18,12 @@ export GOMAILADMIN_APIKEY=abc
 export GOMAILADMIN_APISECRET=abc
 ```
 
-Then you can start the Go-Mail-Admin with the following command
+Then you can start the Go-Mail-Admin with the following command:
 ```
 ./go-mail-admin-with-gui-<VERSION>
 ```
 
-After that you can open the gui via http at http://servername:3001
+After that you can open the GUI via http at http://servername:3001
 
 # Usage
 ## Config
@@ -37,7 +37,7 @@ The script can be configurated with environment variables. The following setting
 
 ## API
 ### Domains
-Domain Action can be triggered by a http call to /api/v1/domain. Parameter can be transmitted as JSON body:
+Domain Action can be triggered by an HTTP call to /api/v1/domain. Parameter can be transmitted as JSON body:
 
 ```
 {
@@ -53,7 +53,7 @@ Domain Action can be triggered by a http call to /api/v1/domain. Parameter can b
 | DELETE | Delete a Domain, required Parameters: domain |
 
 ### Aliases
-Alias actions can be triggered through a http call to /api/v1/alias. Parameter can be transmitted as JSON body:
+Alias actions can be triggered through an HTTP call to /api/v1/alias. Parameter can be transmitted as JSON body:
 
 ```
 {
@@ -76,7 +76,7 @@ Alias actions can be triggered through a http call to /api/v1/alias. Parameter c
 | PUT    | Apdate a Alias, required Parameters: source_username, source_domain, destination_username, destination_domain, enabled, id |
 
 ### Account
-Account actions can be triggered through a http call to /api/v1/account. Parameter can be transmitted as JSON body:
+Account actions can be triggered through a HTTP call to /api/v1/account. Parameter can be transmitted as JSON body:
 
 ```
 {
@@ -97,10 +97,10 @@ Account actions can be triggered through a http call to /api/v1/account. Paramet
 | DELETE | Delete a Account, required Parameters: id |
 | PUT    | Apdate a Alias, required Parameters: quota, enabled, sendonly, id |
 
-To update the password make a http call to /api/v1/account/password with the Json-Body Parameter: id, password
+To update the password, make an HTTP call to /api/v1/account/password with the Json body parameter: id, password
 
 ### TLSpolicies
-TLS policies can be changed through a http call to /api/v1/tlspolicy
+TLS policies can be changed through an HTTP call to /api/v1/tlspolicy
 
 ```
 {
@@ -119,7 +119,7 @@ TLS policies can be changed through a http call to /api/v1/tlspolicy
 | PUT    | Apdate a Policy, required Parameters: domain, policy, params, id |
 
 ## Frontend
-There is a VueJS frontend you can use to see and configure your mailserver. You can access it by opening http://yourmailserver.de:3001, if you set an API key and secret you need to performe a HTTP Basic Auth.
+There is a VueJS frontend you can use to see and configure your mailserver. You can access it by opening http://yourmailserver.de:3001. If you set an API key and secret you need to performe a HTTP Basic Auth.
 
 ### Screenshots
 *Dashboard*
@@ -152,7 +152,7 @@ npm install
 npm run build
 ```
 ### Mailserver-Configurator-Interface
-Open the project folder. Make sure you have all dependencies
+Open the project folder. Make sure all dependencies are there:
 
 ```
 go get github.com/go-sql-driver/mysql
@@ -162,7 +162,7 @@ go get github.com/go-chi/chi
 go get github.com/rakyll/statik
 ```
 
-Create a "public" folder and copy the dist folder from the client into it
+Create a "public" folder and copy the dist folder from the client into it.
 
 ```
 mkdir public
