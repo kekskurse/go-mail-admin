@@ -11,7 +11,7 @@ sudo useradd -m -c "GoMailAdmin" -s /bin/false gomailadmin
 Download the go-mail-admin binary and save it in the home folder of the new user (check if the link is the newest version at the release page)
 
 ```
-wget https://github.com/kekskurse/go-mail-admin/releases/download/v0.1.1/go-mail-admin-with-gui-0.1.1 -O /home/gomailadmin/go-mail-admin-with-gui-0.1.1 
+wget https://github.com/kekskurse/go-mail-admin/releases/download/v0.1.2/go-mail-admin-with-gui-0.1.2 -O /home/gomailadmin/go-mail-admin-with-gui-0.1.2 
 ```
 Change the owner of the binary
 ```
@@ -20,7 +20,7 @@ chown gomailadmin:gomailadmin /home/gomailadmin/go-mail-*
 
 Create a link to the newest version
 ```
-sudo ln -s /home/gomailadmin/go-mail-admin-with-gui-0.1.1 /home/gomailadmin/go-mail-admin
+sudo ln -s /home/gomailadmin/go-mail-admin-with-gui-0.1.2 /home/gomailadmin/go-mail-admin
 ```
 
 Make the binary executable
