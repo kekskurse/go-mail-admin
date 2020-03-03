@@ -54,4 +54,7 @@ export default {
     deleteTLSPolicy(id) {
         return Api().delete("/api/v1/tlspolicy", {"data": {"id": id}})
     },
+    changePassword(id, newpassword) {
+        return Api().put("/api/v1/account/password ", {"id": id, "password": newpassword})
+    }
 }

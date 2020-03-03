@@ -18,6 +18,17 @@
                 </v-card-text>
             </v-card>
         </v-container>
+        <v-container v-if="account.id">
+            <v-card>
+                <v-card-title>Change Password</v-card-title>
+                <v-card-text>
+                    <v-text-field type="password" v-model="password" label="New Password" placeholder="New Password"></v-text-field>
+                    <span style="background-color:#BBDEFB; margin-left: 10px; border-radius: 5px; padding-top: 10px;padding-bottom:8px;">
+                        <v-btn @click="changePassword()" icon><v-icon>mdi-content-save</v-icon></v-btn>
+                    </span>
+                </v-card-text>
+            </v-card>
+        </v-container>
     </div>
 </template>
 
@@ -57,7 +68,13 @@
                         this.$swal("Account saved");
                     })
                 }
-
+            },
+            changePassword: function () {
+                Client.changePassword(this.account.id, this.password).then(()=> {
+                    this.$swal("Password changed");
+                }).catch(() => {
+                    alert("Oups, something go wrong")
+                })
             }
         },
 
@@ -71,6 +88,7 @@
         },
         data: () => ({
             account: {"quota": 1024, "enabled": true},
+            password: '',
             domainNames: []
         }),
     }

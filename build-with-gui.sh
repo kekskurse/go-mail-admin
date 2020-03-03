@@ -3,10 +3,12 @@ then
   echo "Call ./build-with-gui.sh <version>"
   exit
 fi
+echo ">Build Client"
 cd mailserver-configurator-client
 npm install
 npm run build
 cd ..
+echo "> Build Interface"
 cd mailserver-configurator-interface
 rm -r -f public
 mkdir public

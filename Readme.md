@@ -97,7 +97,7 @@ Account actions can be triggered through a http call to /api/v1/account. Paramet
 | DELETE | Delete a Account, required Parameters: id |
 | PUT    | Apdate a Alias, required Parameters: quota, enabled, sendonly, id |
 
-To update the password make a http call to /api/v1/account/password with the Json-Body Parameter: id, password
+To update the password make a http PUT call to /api/v1/account/password with the Json-Body Parameter: id, password
 
 ### TLSpolicies
 TLS policies can be changed through a http call to /api/v1/tlspolicy
