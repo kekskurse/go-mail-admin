@@ -42,6 +42,14 @@ deb-arm:
 	cd ./resources/; dpkg-deb --build ./debpkg-arm
 	mv ./resources/debpkg-arm.deb ./bin/go-mail-admin-arm.deb
 
+version:
+	mv bin/go-mail-admin-amd64.deb bin/go-mail-admin-amd64-$(VERSION).deb
+	mv bin/go-mail-admin-arm.deb bin/go-mail-admin-arm-$(VERSION).deb
+	mv bin/go-mail-admin-i386.deb bin/go-mail-admin-i386-$(VERSION).deb
+	mv bin/go-mail-admin-with-gui-linux-amd64 bin/go-mail-admin-with-gui-linux-amd64-$(VERSION)
+	mv bin/go-mail-admin-with-gui-linux-arm64 bin/go-mail-admin-with-gui-linux-arm64-$(VERSION)
+	mv bin/go-mail-admin-with-gui-linux-arm bin/go-mail-admin-with-gui-linux-arm-$(VERSION)
+	mv bin/go-mail-admin-with-gui-linux-386 bin/go-mail-admin-with-gui-linux-386-$(VERSION)
 
 build: client-build interface-copy-client interface-install-deps interface-build
 compile: client-build interface-copy-client interface-install-deps interface-compile

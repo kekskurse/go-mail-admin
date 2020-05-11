@@ -16,6 +16,8 @@ RestartSec=3
 Environment="GOMAILADMIN_DB=vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail"
 Environment="GOMAILADMIN_APIKEY=abc"
 Environment="GOMAILADMIN_APISECRET=abc"
+Environment="GOMAILADMIN_PORT=3001"
+
 
 [Install]
 WantedBy=multi-user.target
