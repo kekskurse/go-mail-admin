@@ -3,3 +3,5 @@ gin-bin
 go-mail-admin*
 !go-mail-admin.service
 .idea/
+bin/
+!bin/.gitkeep
