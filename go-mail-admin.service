@@ -18,6 +18,5 @@ Environment="GOMAILADMIN_APIKEY=abc"
 Environment="GOMAILADMIN_APISECRET=abc"
 Environment="GOMAILADMIN_PORT=3001"
 
-
 [Install]
 WantedBy=multi-user.target

@@ -16,6 +16,7 @@ Set the environment variables to configure the Go-Mail-Admin
 export GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail"
 export GOMAILADMIN_APIKEY=abc
 export GOMAILADMIN_APISECRET=abc
+export GOMAILADMIN_PORT=3001
 ```
 
 Then you can start the Go-Mail-Admin with the following command
@@ -23,17 +24,18 @@ Then you can start the Go-Mail-Admin with the following command
 ./go-mail-admin-with-gui-<VERSION>
 ```
 
-After that you can open the gui via http at http://servername:3001
+After that you can open the gui via http at http://servername:3001 (or your specified custom port)
 
 # Usage
 ## Config
-The script can be configurated with environment variables. The following settings are possible:
+The script can be configured with environment variables. The following settings are possible:
 
 | Key | Required | Notice |
 | --- | ---      | --- |
 | GOMAILADMIN_DB | Yes | Database connection string like 'username:password@tcp(127.0.0.1:3306)/database' |
 | GOMAILADMIN_APIKEY | No | API Key for HTTP-Basic-Auth (just use if APISECRET  is set too)  |
 | GOMAILADMIN_APISECRET | No | API Secret for HTTP-Basic-Auth (just use if APIKEY is set too) |
+| GOMAILADMIN_PORT | No | Port at which is bound (default: 3001) |
 
 ## API
 ### Domains
