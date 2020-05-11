@@ -160,6 +160,7 @@ go get github.com/go-chi/cors
 go get gopkg.in/unrolled/render.v1
 go get github.com/go-chi/chi
 go get github.com/rakyll/statik
+go get github.com/99designs/basicauth-go
 ```
 
 Create a "public" folder and copy the dist folder from the client into it
