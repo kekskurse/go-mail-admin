@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/99designs/basicauth-go"
 	"github.com/go-chi/chi/middleware"
 	"github.com/rakyll/statik/fs"
 	"log"
@@ -47,6 +46,14 @@ func getConfigVariable(name string) string {
 	return value
 }
 
+func getConfigVariableWithDefault(name string, defaultValue string) string {
+	value := os.Getenv("GOMAILADMIN_"+name)
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
 func http_ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Pong"))
 }
@@ -67,17 +74,23 @@ func defineRouter() chi.Router {
 	r := chi.NewRouter()
 
 	//r.Use(basicauth.NewFromEnv("Need Auth", "GOMAILADMIN_USER"))
-	apiKey := getConfigVariable("APIKEY")
-	apiSecret := getConfigVariable("APISECRET")
+	// @todo clean old basic auth lib code
+	//apiKey := getConfigVariable("APIKEY")
+	//apiSecret := getConfigVariable("APISECRET")
 
-	if apiKey != "" && apiSecret != "" {
+	/*if apiKey != "" && apiSecret != "" {
 		r.Use(basicauth.New("MyRealm", map[string][]string{
 			apiKey: {apiSecret},
 		}))
 		log.Println("Enabled Basic auth for basic protection.")
 	} else {
 		log.Println("Run without Basic auth, make sure to protect the API at another layer")
-	}
+	}*/
+
+	auth := NewAuthFromEnv()
+	r.Use(auth.Handle)
+
+
 
 	cors := cors.New(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
@@ -129,10 +142,7 @@ func main() {
 	log.Println("Start Go Mail Admin")
 	connectToDb()
 	router := defineRouter()
-	port := getConfigVariable("PORT")
-	if port == "" {
-		port = "3001"
-	}
+	port := getConfigVariableWithDefault("PORT", "3001")
 	http.ListenAndServe(":" + port, router)
 	fmt.Println("Done")
 }
