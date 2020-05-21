@@ -65,7 +65,8 @@
                 } else {
                     Client.createAccount(this.account).then(() => {
                         this.getAccounts();
-                        this.$swal("Account saved");
+                        this.$swal("Account created");
+                        this.$router.push("/account")
                     })
                 }
             },
