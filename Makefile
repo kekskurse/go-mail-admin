@@ -42,6 +42,11 @@ deb-arm:
 	cd ./resources/; dpkg-deb --build ./debpkg-arm
 	mv ./resources/debpkg-arm.deb ./bin/go-mail-admin-arm.deb
 
+changeVersion:
+	sed -i -E "s/Version:?.*/\Version: $(VERSION)/" resources/debpkg-amd64/DEBIAN/control
+	sed -i -E "s/Version:?.*/\Version: $(VERSION)/" resources/debpkg-arm/DEBIAN/control
+	sed -i -E "s/Version:?.*/\Version: $(VERSION)/" resources/debpkg-i386/DEBIAN/control
+
 version:
 	mv bin/go-mail-admin-amd64.deb bin/go-mail-admin-amd64-$(VERSION).deb
 	mv bin/go-mail-admin-arm.deb bin/go-mail-admin-arm-$(VERSION).deb
@@ -54,3 +59,4 @@ version:
 build: client-build interface-copy-client interface-install-deps interface-build
 compile: client-build interface-copy-client interface-install-deps interface-compile
 all: compile deb-i386 deb-amd64 deb-arm
+release: changeVersion all version
