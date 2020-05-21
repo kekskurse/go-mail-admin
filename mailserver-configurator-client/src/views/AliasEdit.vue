@@ -68,7 +68,8 @@
                 } else {
                     Client.createAlias(this.alias).then(() => {
                         this.getAliases();
-                        this.$swal("Alias saved");
+                        this.$swal("Alias created");
+                        this.$router.push("/alias")
                     })
                 }
 
