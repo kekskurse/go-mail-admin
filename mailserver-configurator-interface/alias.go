@@ -62,10 +62,21 @@ func addAlias(w http.ResponseWriter, r *http.Request) {
 	var alias Alias
 	json.Unmarshal(body, &alias)
 
-	if alias.SourceUsername != nil && *alias.SourceUsername == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Source Username can`t be empty string, only null or string is valid"))
-		return
+
+	if getConfigVariable("CATCHALL") != "On" {
+		// Remove when the feature toggle is not needed anymore
+		if alias.SourceUsername == nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Catchall Feature is not enabled"))
+			return
+		}
+	} else {
+		//Keep this if Feature toogle is removed
+		if alias.SourceUsername != nil && *alias.SourceUsername == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Source Username can`t be empty string, only null or string is valid"))
+			return
+		}
 	}
 
 	stmt, err := db.Prepare("INSERT INTO aliases (`source_username`, `source_domain`, `destination_username`, `destination_domain`, `enabled`) VALUES(?, ?, ?, ?, ?)")
