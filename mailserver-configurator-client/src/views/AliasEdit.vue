@@ -8,7 +8,9 @@
                         v-model="alias.source_username"
                         placeholder="Source Username"
                         label="Source Username"
+                        :disabled="catchall == 1"
                         ></v-text-field>
+                    <v-checkbox v-model="catchall" label="Catch all"></v-checkbox>
                     <v-select
                             :items="domainNames"
                             label="Source Domain"
@@ -45,6 +47,9 @@
                     for(var i = 0; i < res.data.length; i++) {
                         if(res.data[i].id == this.$route.params.id) {
                             this.alias = res.data[i]
+                            if(this.alias.source_username == null) {
+                                this.catchall = true
+                            }
                         }
                     }
                 });
@@ -59,6 +64,13 @@
 
             },
             saveAlias: function () {
+                if(this.catchall) {
+                    this.alias.source_username = null;
+                } else {
+                    if(this.alias.source_username == null) {
+                        this.alias.source_username = "";
+                    }
+                }
                 if(this.alias.id) {
                     Client.saveAlias(this.alias).then(() => {
                         this.getAliases();
@@ -70,6 +82,12 @@
                         this.getAliases();
                         this.$swal("Alias created");
                         this.$router.push("/alias")
+                    }, (e) => {
+                        var msg = e.response.data
+                        if(msg == "Source Username can`t be empty string, only null or string is valid"){
+                            msg = "Enter Source Username or enable catch all!"
+                        }
+                        this.$swal("Something go wrong", msg, "error");
                     })
                 }
 
@@ -87,7 +105,8 @@
         data: () => ({
             alias: {"enabled": true},
             domainNames: [],
-            sample: ["abc", "asd", "sdf"]
+            sample: ["abc", "asd", "sdf"],
+            catchall: false
         }),
     }
 </script>
