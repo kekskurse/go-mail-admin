@@ -1,4 +1,39 @@
-# Installation
+# Installation from Debian Package
+
+## Download Binary
+Download the go-mail-admin deb file from the Release Page and load it to your server, for debian with
+```
+wget https://github.com/kekskurse/go-mail-admin/releases/download/v0.1.3/go-mail-admin-amd64-0.1.3.deb
+```
+
+After it install the Debian Package
+
+```
+dpkg -i go-mail-admin-amd64-*.deb
+```
+
+Remove the deb file after it
+
+```
+rm go-mail-admin-amd64-*.deb 
+```
+
+Copy the sample config in /etc/go-mail-admin and change the values
+```
+cp /etc/go-mail-admin/go-mail-admin.env.sample /etc/go-mail-admin/go-mail-admin.env
+```
+
+If you want to enabled the autostart the go-mail-admin run
+```
+sudo systemctl enable go-mail-admin
+```
+
+than start go-mail-admin by run
+```
+sudo systemctl start go-mail-admin
+```
+
+# Installation from Binary
 Easy installation to run go-mail-admin
 
 ## Create User
@@ -45,3 +80,22 @@ systemctl start go-mail-admin.service
 ```
 
 After that you can call the gui via http at http://servername:3001
+
+# Update
+
+## With Binary
+Just download the new Binary for your system and replace it with the old one, after it restart the service with
+```
+systemctl restart go-mail-admin.service
+```
+
+## From Binary to Deb Package 
+Stop the Project if it is still running
+```
+systemctl stop go-mail-admin.service
+```
+You can remove the Binary and the "gomailadmin" if you dont use it for anything else. Remove the systemd file
+```
+rm /etc/systemd/system/go-mail-admin.service
+```
+After it install the newest Version from the Debian Package.

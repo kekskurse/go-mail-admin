@@ -36,6 +36,7 @@ The script can be configured with environment variables. The following settings 
 | GOMAILADMIN_APIKEY | No | API Key for HTTP-Basic-Auth (just use if APISECRET  is set too)  |
 | GOMAILADMIN_APISECRET | No | API Secret for HTTP-Basic-Auth (just use if APIKEY is set too) |
 | GOMAILADMIN_PORT | No | Port at which is bound (default: 3001) |
+| GOMAILADMIN_CATCHALL | No | If set to "On" the catchall feature will be enabled, its necessary that source_username in alias can be NULL |
 
 ## API
 ### Domains
