@@ -121,6 +121,18 @@ TLS policies can be changed through a http call to /api/v1/tlspolicy
 | DELETE | Delete a Policy, required Parameters: id |
 | PUT    | Apdate a Policy, required Parameters: domain, policy, params, id |
 
+### Feature Toggles
+To make changes in the frontend based on the features, make a GET call to /api/v1/features
+
+Response:
+```
+{
+  "catchall": false
+}
+```
+
+
+
 ## Frontend
 There is a VueJS frontend you can use to see and configure your mailserver. You can access it by opening http://yourmailserver.de:3001, if you set an API key and secret you need to performe a HTTP Basic Auth.
 
