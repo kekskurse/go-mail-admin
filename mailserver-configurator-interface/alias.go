@@ -38,13 +38,13 @@ func getAliases(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 
-		username := ""
-
 		if alias.SourceUsername != nil {
-			username = *alias.SourceUsername
+			alias.PrintSource = *alias.SourceUsername + "@" + *alias.SourceDomain
+		} else {
+			alias.PrintSource = "Catchall for "+*alias.SourceDomain
 		}
 
-		alias.PrintSource = username + "@" + *alias.SourceDomain
+
 		alias.PrintDestination = *alias.DestinationUsername + "@" + *alias.DestinationDomain
 		aliases = append(aliases, alias)
 	}
