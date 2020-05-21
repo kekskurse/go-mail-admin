@@ -12,10 +12,10 @@ import (
 // Alias from MYSQL
 type Alias struct {
 	ID                  int    `json:"id"`
-	SourceUsername      string `json:"source_username"`
-	SourceDomain        string `json:"source_domain"`
-	DestinationUsername string `json:"destination_username"`
-	DestinationDomain   string `json:"destination_domain"`
+	SourceUsername      *string `json:"source_username"`
+	SourceDomain        *string `json:"source_domain"`
+	DestinationUsername *string `json:"destination_username"`
+	DestinationDomain   *string `json:"destination_domain"`
 	Enabled             bool   `json:"enabled"`
 	PrintSource         string `json:"print_source"`
 	PrintDestination    string `json:"print_destination"`
@@ -37,8 +37,15 @@ func getAliases(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		alias.PrintSource = alias.SourceUsername + "@" + alias.SourceDomain
-		alias.PrintDestination = alias.DestinationUsername + "@" + alias.DestinationDomain
+
+		username := ""
+
+		if alias.SourceUsername != nil {
+			username = *alias.SourceUsername
+		}
+
+		alias.PrintSource = username + "@" + *alias.SourceDomain
+		alias.PrintDestination = *alias.DestinationUsername + "@" + *alias.DestinationDomain
 		aliases = append(aliases, alias)
 	}
 	ren := render.New()
@@ -54,6 +61,12 @@ func addAlias(w http.ResponseWriter, r *http.Request) {
 
 	var alias Alias
 	json.Unmarshal(body, &alias)
+
+	if alias.SourceUsername != nil && *alias.SourceUsername == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Source Username can`t be empty string, only null or string is valid"))
+		return
+	}
 
 	stmt, err := db.Prepare("INSERT INTO aliases (`source_username`, `source_domain`, `destination_username`, `destination_domain`, `enabled`) VALUES(?, ?, ?, ?, ?)")
 	if err != nil {
