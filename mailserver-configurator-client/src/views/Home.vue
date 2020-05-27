@@ -18,9 +18,9 @@
                   <v-list-item-title>New Aliases</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item href="https://github.com/kekskurse/go-mail-admin/issues">
+              <v-list-item href="https://github.com/kekskurse/go-mail-admin/issues" target="_blank">
                 <v-list-item-content>
-                  <v-list-item-title>Report a Issue</v-list-item-title>
+                  <v-list-item-title>Report an Issue</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>

@@ -27,7 +27,7 @@
             <v-btn to="/tls" icon>
                 <v-icon>mdi-security</v-icon>
             </v-btn>
-            <a href="https://github.com/kekskurse/go-mail-admin">
+            <a href="https://github.com/kekskurse/go-mail-admin" target="_blank">
                 <v-btn icon>
                     <v-icon>mdi-git</v-icon>
                 </v-btn>
