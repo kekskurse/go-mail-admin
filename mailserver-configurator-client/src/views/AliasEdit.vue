@@ -18,8 +18,8 @@
                     ></v-select>
                     <v-text-field
                             v-model="alias.destination_username"
-                            placeholder="Source Username"
-                            label="Source Username"
+                            placeholder="Destination Username"
+                            label="Destination Username"
                     ></v-text-field>
                     <v-text-field
                             v-model="alias.destination_domain"
