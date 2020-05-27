@@ -7,7 +7,7 @@ You just need to download one binary file to the server and run it, no other dep
 The HTTP interface doesn't validate your data, it's just another way to access your database.
 # Installation
 
-Note: For installing the Go-Mail-Admin so it's always running and for adding it to the autostart there is a [step by step howto](https://github.com/kekskurse/go-mail-admin/blob/master/install.md).
+Note: For installing the Go-Mail-Admin so it's always running and for adding it to the autostart there is a [step by step howto](https://github.com/kekskurse/go-mail-admin/blob/master/docs/install.md).
 
 Download the last binary from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) to your Ubuntu/Debian mailserver. 
 
@@ -30,107 +30,17 @@ After that you can open the gui via http at http://servername:3001 (or your spec
 ## Config
 The script can be configured with environment variables. The following settings are possible:
 
-| Key | Required | Notice |
-| --- | ---      | --- |
-| GOMAILADMIN_DB | Yes | Database connection string like 'username:password@tcp(127.0.0.1:3306)/database' |
-| GOMAILADMIN_APIKEY | No | API Key for HTTP-Basic-Auth (just use if APISECRET  is set too)  |
-| GOMAILADMIN_APISECRET | No | API Secret for HTTP-Basic-Auth (just use if APIKEY is set too) |
-| GOMAILADMIN_PORT | No | Port at which is bound (default: 3001) |
-| GOMAILADMIN_CATCHALL | No | If set to "On" the catchall feature will be enabled, its necessary that source_username in alias can be NULL |
+| Key | Required | Default | Notice |
+| --- | ---      | --- |   --- |
+| GOMAILADMIN_DB | Yes | | Database connection string like 'username:password@tcp(127.0.0.1:3306)/database' |
+| GOMAILADMIN_APIKEY | No | | API Key for HTTP-Basic-Auth (just use if APISECRET  is set too)  |
+| GOMAILADMIN_APISECRET | No | | API Secret for HTTP-Basic-Auth (just use if APIKEY is set too) |
+| GOMAILADMIN_PORT | No | 3001 | Port at which is bound (default: 3001) |
+| GOMAILADMIN_CATCHALL | No | Off | If set to "On" the catchall feature will be enabled, its necessary that source_username in alias can be NULL |
 
 ## API
-### Domains
-Domain Action can be triggered by a http call to /api/v1/domain. Parameter can be transmitted as JSON body:
 
-```
-{
-  "id": 1,
-  "domain": "example.com"
-}
-```
-
-| Method | Notice |
-| ---    | ---    |
-| GET    | List all Domains |
-| POST   | Create a new Domain, required Parameters: domain |
-| DELETE | Delete a Domain, required Parameters: domain |
-
-### Aliases
-Alias actions can be triggered through a http call to /api/v1/alias. Parameter can be transmitted as JSON body:
-
-```
-{
-  "id": 2,
-  "source_username": "admin",
-  "source_domain": "example.com",
-  "destination_username": "test",
-  "destination_domain": "example.com",
-  "enabled": true,
-  "print_source": "admin@example.com", # Just to show it in a gui based on source_username@source_domain
-  "print_destination": "test@example.com" # Just to show it in a gui based on destination_username@destination_domain
-}
-```
-
-| Method | Notice |
-| ---    | ---    |
-| GET    | List all Aliases |
-| POST   | Create a new Alias, required Parameters: source_username, source_domain, destination_username, destination_domain, enabled |
-| DELETE | Delete a Domain, required Parameters: id |
-| PUT    | Apdate a Alias, required Parameters: source_username, source_domain, destination_username, destination_domain, enabled, id |
-
-### Account
-Account actions can be triggered through a http call to /api/v1/account. Parameter can be transmitted as JSON body:
-
-```
-{
-  "id": 1,
-  "username": "admin",
-  "domain": "example.com",
-  "quota": 3000,
-  "enabled": true,
-  "sendonly": false,
-  "print": "admin@example.com" # Just to show it in a gui, based on username@domain
-}
-```
-
-| Method | Notice |
-| ---    | ---    |
-| GET    | List all Accounts |
-| POST   | Create a new Account, required Parameters: username, domain, password, quota, enabled, sendonly |
-| DELETE | Delete a Account, required Parameters: id |
-| PUT    | Apdate a Alias, required Parameters: quota, enabled, sendonly, id |
-
-To update the password make a http PUT call to /api/v1/account/password with the Json-Body Parameter: id, password
-
-### TLSpolicies
-TLS policies can be changed through a http call to /api/v1/tlspolicy
-
-```
-{
-  "id": 1,
-  "domain": "example.com",
-  "policy": "dane",
-  "params": "match=*.example.com"
-}
-```
-
-| Method | Notice |
-| ---    | ---    |
-| GET    | List all Policys |
-| POST   | Create a new Policy, required Parameters: domain, policy, params |
-| DELETE | Delete a Policy, required Parameters: id |
-| PUT    | Apdate a Policy, required Parameters: domain, policy, params, id |
-
-### Feature Toggles
-To make changes in the frontend based on the features, make a GET call to /api/v1/features
-
-Response:
-```
-{
-  "catchall": false
-}
-```
-
+All features avalible in the Frontend are also in the API. The API current works with HTTP Basic Auth. [The documenation is avalible here](https://mrin9.github.io/OpenAPI-Viewer/#/load/https%3A%2F%2Fraw.githubusercontent.com%2Fkekskurse%2Fgo-mail-admin%2Fmaster%2Fdocs%2Fopenapi.json).
 
 
 ## Frontend
