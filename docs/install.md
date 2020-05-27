@@ -69,7 +69,7 @@ Create a new file called /etc/systemd/system/go-mail-admin.service
 ```
 sudo nano /etc/systemd/system/go-mail-admin.service
 ```
-copy the content from the [sample file](https://github.com/kekskurse/go-mail-admin/blob/master/go-mail-admin.service) and change the 4 environment settings!
+copy the content from the [sample file](https://github.com/kekskurse/go-mail-admin/blob/master/docs/go-mail-admin.service) and change the 4 environment settings!
 
 ## Enabled and Start Service
 Run the following command to enable and start the service. After it the service will autostart always.
