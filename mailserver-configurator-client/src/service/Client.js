@@ -36,6 +36,7 @@ export default {
         return Api().put("/api/v1/account", data)
     },
     createAccount(data) {
+        data["quota"] = parseInt(data["quota"])
         return Api().post("/api/v1/account", data)
     },
     deleteAccount(id) {
