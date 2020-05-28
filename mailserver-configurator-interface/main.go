@@ -68,6 +68,7 @@ func http_status(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Ok"))
 }
 
+var authConfig auth
 
 func defineRouter() chi.Router {
 	log.Println("Setup API-Routen")
@@ -87,8 +88,8 @@ func defineRouter() chi.Router {
 		log.Println("Run without Basic auth, make sure to protect the API at another layer")
 	}*/
 
-	auth := NewAuthFromEnv()
-	r.Use(auth.Handle)
+	authConfig = NewAuthFromEnv()
+
 
 
 
@@ -108,25 +109,30 @@ func defineRouter() chi.Router {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/api/v1/domain", getDomains)
-	r.Post("/api/v1/domain", addDomain)
-	r.Delete("/api/v1/domain", deleteDomain)
-	r.Get("/api/v1/alias", getAliases)
-	r.Post("/api/v1/alias", addAlias)
-	r.Delete("/api/v1/alias", deleteAlias)
-	r.Put("/api/v1/alias", updateAlias)
-	r.Get("/api/v1/account", getAccounts)
-	r.Post("/api/v1/account", addAccount)
-	r.Delete("/api/v1/account", deleteAccount)
-	r.Put("/api/v1/account", updateAccount)
-	r.Put("/api/v1/account/password", updateAccountPassword)
-	r.Get("/api/v1/tlspolicy", getTLSPolicy)
-	r.Post("/api/v1/tlspolicy", addTLSPolicy)
-	r.Put("/api/v1/tlspolicy", updateTLSPolicy)
-	r.Delete("/api/v1/tlspolicy", deleteTLSPolicy)
-	r.Get("/api/v1/features", getFeatureToggles)
+	apiRouten := chi.NewRouter()
+	apiRouten.Use(authConfig.Handle)
+
+	apiRouten.Get("/v1/domain", getDomains)
+	apiRouten.Post("/v1/domain", addDomain)
+	apiRouten.Delete("/v1/domain", deleteDomain)
+	apiRouten.Get("/v1/alias", getAliases)
+	apiRouten.Post("/v1/alias", addAlias)
+	apiRouten.Delete("/v1/alias", deleteAlias)
+	apiRouten.Put("/v1/alias", updateAlias)
+	apiRouten.Get("/v1/account", getAccounts)
+	apiRouten.Post("/v1/account", addAccount)
+	apiRouten.Delete("/v1/account", deleteAccount)
+	apiRouten.Put("/v1/account", updateAccount)
+	apiRouten.Put("/v1/account/password", updateAccountPassword)
+	apiRouten.Get("/v1/tlspolicy", getTLSPolicy)
+	apiRouten.Post("/v1/tlspolicy", addTLSPolicy)
+	apiRouten.Put("/v1/tlspolicy", updateTLSPolicy)
+	apiRouten.Delete("/v1/tlspolicy", deleteTLSPolicy)
+	apiRouten.Get("/v1/features", getFeatureToggles)
 	r.Get("/ping", http_ping)
 	r.Get("/status", http_status)
+
+	r.Mount("/api", apiRouten)
 
 	//Static files
 	statikFS, err := fs.New()
