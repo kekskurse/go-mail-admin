@@ -23,7 +23,7 @@ interface-compile:
 	echo "Compiling for every OS and Platform"
 	rm -f ./bin/*
 	cd ./mailserver-configurator-interface; GOOS=linux GOARCH=386 go build -o ../bin/go-mail-admin-with-gui-linux-386 ./
-	cd ./mailserver-configurator-interface; GOOS=linux GOARCH=arm go build -o ../bin/go-mail-admin-with-gui-linux-arm ./
+	cd ./mailserver-configurator-interface; GOOS=linux GOARM=7 GOARCH=arm go build -o ../bin/go-mail-admin-with-gui-linux-arm ./
 	cd ./mailserver-configurator-interface; GOOS=linux GOARCH=arm64 go build -o ../bin/go-mail-admin-with-gui-linux-arm64 ./
 	cd ./mailserver-configurator-interface; GOOS=linux GOARCH=amd64 go build -o ../bin/go-mail-admin-with-gui-linux-amd64 ./
 
@@ -37,19 +37,19 @@ deb-amd64:
 	cd ./resources/; dpkg-deb --build ./debpkg-amd64
 	mv ./resources/debpkg-amd64.deb ./bin/go-mail-admin-amd64.deb
 
-deb-arm:
-	cp ./bin/go-mail-admin-with-gui-linux-arm ./resources/debpkg-amd64/opt/go-mail-admin/go-mail-admin-with-gui-linux-arm
-	cd ./resources/; dpkg-deb --build ./debpkg-arm
-	mv ./resources/debpkg-arm.deb ./bin/go-mail-admin-arm.deb
+deb-armhf:
+	cp ./bin/go-mail-admin-with-gui-linux-arm ./resources/debpkg-armhf/opt/go-mail-admin/go-mail-admin-with-gui-linux-arm
+	cd ./resources/; dpkg-deb --build ./debpkg-armhf
+	mv ./resources/debpkg-armhf.deb ./bin/go-mail-admin-armhf.deb
 
 changeVersion:
 	sed -i -E "s/Version:?.*/\Version: $(VERSION)/" resources/debpkg-amd64/DEBIAN/control
-	sed -i -E "s/Version:?.*/\Version: $(VERSION)/" resources/debpkg-arm/DEBIAN/control
+	sed -i -E "s/Version:?.*/\Version: $(VERSION)/" resources/debpkg-armhf/DEBIAN/control
 	sed -i -E "s/Version:?.*/\Version: $(VERSION)/" resources/debpkg-i386/DEBIAN/control
 
 version:
 	mv bin/go-mail-admin-amd64.deb bin/go-mail-admin-amd64-$(VERSION).deb
-	mv bin/go-mail-admin-arm.deb bin/go-mail-admin-arm-$(VERSION).deb
+	mv bin/go-mail-admin-armhf.deb bin/go-mail-admin-armhf-$(VERSION).deb
 	mv bin/go-mail-admin-i386.deb bin/go-mail-admin-i386-$(VERSION).deb
 	mv bin/go-mail-admin-with-gui-linux-amd64 bin/go-mail-admin-with-gui-linux-amd64-$(VERSION)
 	mv bin/go-mail-admin-with-gui-linux-arm64 bin/go-mail-admin-with-gui-linux-arm64-$(VERSION)
@@ -58,5 +58,5 @@ version:
 
 build: client-build interface-copy-client interface-install-deps interface-build
 compile: client-build interface-copy-client interface-install-deps interface-compile
-all: compile deb-i386 deb-amd64 deb-arm
+all: compile deb-i386 deb-amd64 deb-armhf
 release: changeVersion all version

@@ -10,7 +10,7 @@
                         label="Source Username"
                         :disabled="catchall == 1"
                         ></v-text-field>
-                    <v-checkbox v-model="catchall" label="Catch all"></v-checkbox>
+                    <v-checkbox v-if="this.toggle_catchall" v-model="catchall" label="Catch all"></v-checkbox>
                     <v-select
                             :items="domainNames"
                             label="Source Domain"
@@ -18,8 +18,8 @@
                     ></v-select>
                     <v-text-field
                             v-model="alias.destination_username"
-                            placeholder="Source Username"
-                            label="Source Username"
+                            placeholder="Destination Username"
+                            label="Destination Username"
                     ></v-text-field>
                     <v-text-field
                             v-model="alias.destination_domain"
@@ -42,6 +42,11 @@
     export default {
         name: 'AliasEdit',
         methods: {
+            getFeatures: function () {
+                Client.featureToggles().then((res) => {
+                   this.toggle_catchall = res.data.catchall;
+                });
+            },
             getAliases: function () {
                 Client.getAlias().then((res) => {
                     for(var i = 0; i < res.data.length; i++) {
@@ -59,18 +64,21 @@
                    for(var i = 0; i < res.data.length; i++) {
                        this.domainNames.push(res.data[i].domain)
                    }
-                   console.log(this.domainNames)
                 });
 
             },
             saveAlias: function () {
-                if(this.catchall) {
-                    this.alias.source_username = null;
-                } else {
-                    if(this.alias.source_username == null) {
-                        this.alias.source_username = "";
+                //remove this if feature toggle is not needed anymore
+                if(this.toggle_catchall) {
+                    if(this.catchall) {
+                        this.alias.source_username = null;
+                    } else {
+                        if(this.alias.source_username == null) {
+                            this.alias.source_username = "";
+                        }
                     }
                 }
+
                 if(this.alias.id) {
                     Client.saveAlias(this.alias).then(() => {
                         this.getAliases();
@@ -95,6 +103,7 @@
         },
 
         mounted: function() {
+            this.getFeatures();
             this.getDomains();
             this.getAliases();
 
@@ -106,7 +115,8 @@
             alias: {"enabled": true},
             domainNames: [],
             sample: ["abc", "asd", "sdf"],
-            catchall: false
+            catchall: false,
+            toggle_catchall: false
         }),
     }
 </script>
