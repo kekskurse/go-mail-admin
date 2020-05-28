@@ -7,7 +7,8 @@
                     <span v-if="!account.id">
                         <v-text-field v-model="account.username" label="Username" placeholder="Username"></v-text-field>
                          <v-select v-model="account.domain" data-app="true" :items="domainNames" label="Destination-Domain"></v-select>
-                        <v-text-field v-model="account.password" label="Password" type="password" placeholder="Password"></v-text-field>
+                        <v-text-field v-on:keyup="passwordFieldChanged()" v-on:change="passwordFieldChanged()" v-model="account.password" label="Password" :type="passwordFieldType" placeholder="Password"></v-text-field>
+                        <v-btn @click="generateRandomPassword()" x-small>Random Password</v-btn>
                     </span>
                     <v-text-field v-model="account.quota" label="Quota" placeholder="Quota"></v-text-field>
                     <v-checkbox v-model="account.enabled" label="Enabled"></v-checkbox>
@@ -22,7 +23,8 @@
             <v-card>
                 <v-card-title>Change Password</v-card-title>
                 <v-card-text>
-                    <v-text-field type="password" v-model="password" label="New Password" placeholder="New Password"></v-text-field>
+                    <v-text-field v-model="password" :type="passwordFieldType" v-on:keyup="passwordFieldChanged()" v-on:change="passwordFieldChanged()" label="New Password" placeholder="New Password"></v-text-field>
+                    <v-btn @click="generateRandomPassword()" x-small>Random Password</v-btn>
                     <span style="background-color:#BBDEFB; margin-left: 10px; border-radius: 5px; padding-top: 10px;padding-bottom:8px;">
                         <v-btn @click="changePassword()" icon><v-icon>mdi-content-save</v-icon></v-btn>
                     </span>
@@ -37,6 +39,27 @@
     export default {
         name: 'AliasEdit',
         methods: {
+            generateRandomPassword: function () {
+                this.passwordFieldType = "password"
+                this.passwordFieldType = "text"
+                this.generate();
+            },
+            passwordFieldChanged: function() {
+                if(this.account.password != this.lastRandomPassword) {
+                    this.passwordFieldType = "password";
+                }
+            },
+            generate () {
+                let CharacterSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789![]{}()%&*<>~.';
+                let password = '';
+
+                for(let i=0; i < 25; i++) {
+                    password += CharacterSet.charAt(Math.floor(Math.random() * CharacterSet.length));
+                }
+                this.account.password = password;
+                this.password = password;
+                this.lastRandomPassword = password;
+            },
             getAccounts: function () {
                 Client.getAccounts().then((res) => {
                     for(var i = 0; i < res.data.length; i++) {
@@ -90,7 +113,9 @@
         data: () => ({
             account: {"quota": 1024, "enabled": true},
             password: '',
-            domainNames: []
+            domainNames: [],
+            passwordFieldType: "password",
+            lastRandomPassword: ""
         }),
     }
 </script>
