@@ -20,7 +20,7 @@
 
                 this.renderChart(
                     {
-                        labels: ["Einabled", "Disabled"],
+                        labels: ["Enabled", "Disabled"],
                         datasets: [
                             {
                                 backgroundColor: ["#4CAF50", "#F44336"],
