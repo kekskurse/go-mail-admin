@@ -10,7 +10,7 @@ interface-copy-client:
 interface-install-deps:
 	go get github.com/go-sql-driver/mysql
 	go get github.com/go-chi/cors
-	go get gopkg.in/unrolled/render.v1
+	go get github.com/unrolled/render
 	go get github.com/go-chi/chi
 	go get github.com/rakyll/statik
 	go get github.com/99designs/basicauth-go
