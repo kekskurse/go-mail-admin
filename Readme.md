@@ -11,7 +11,7 @@ Note: For installing the Go-Mail-Admin so it's always running and for adding it 
 
 Download the last binary from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) to your Ubuntu/Debian mailserver. 
 
-Set the environment variables to configure the Go-Mail-Admin
+Set the environment variables to configure the Go-Mail-Admin, e.g.:
 ```
 export GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail"
 export GOMAILADMIN_APIKEY=abc
@@ -35,6 +35,7 @@ The script can be configured with environment variables. The following settings 
 | GOMAILADMIN_DB | Yes | | Database connection string like 'username:password@tcp(127.0.0.1:3306)/database' |
 | GOMAILADMIN_APIKEY | No | | API Key for HTTP-Basic-Auth (just use if APISECRET  is set too)  |
 | GOMAILADMIN_APISECRET | No | | API Secret for HTTP-Basic-Auth (just use if APIKEY is set too) |
+| GOMAILADMIN_ADDRESS | No | ":" (all) | IP address to bind to |
 | GOMAILADMIN_PORT | No | 3001 | Port at which is bound (default: 3001) |
 | GOMAILADMIN_CATCHALL | No | Off | If set to "On" the catchall feature will be enabled, its necessary that source_username in alias can be NULL |
 
