@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"github.com/unrolled/render"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
-	"log"
-	"strings"
 )
 
 type auth struct {
@@ -76,7 +75,7 @@ func NewAuthFromEnv(r redisConnection) auth {
 		a.Password = getConfigVariable("AUTH_USERNAME_PASSWORD")
 	}
 
-	if a.Method == "AdminMail" {
+	/*if a.Method == "AdminMail" {
 		log.Println("Auth: Enabled AdminMail")
 		adminMails := strings.Split(getConfigVariable("AUTH_AdminMail_MAIL"), ",")
 		apiKeys := strings.Split(getConfigVariable("AUTH_AdminMail_API"), ",")
@@ -97,7 +96,7 @@ func NewAuthFromEnv(r redisConnection) auth {
 			panic("Auth: AdminMail is used but no Admin E-Mail address or API-Key is set")
 		}
 
-	}
+	}*/
 
 	return a
 }
@@ -143,9 +142,9 @@ func (a *auth) Handle(next http.Handler) http.Handler {
 			}
 		}
 
-		if a.Method == "AdminMail" {
+		/*if a.Method == "AdminMail" {
 			panic("Auth method AdminMail is not done yet")
-		}
+		}*/
 
 		panic("No valid Auth Method is set")
 
