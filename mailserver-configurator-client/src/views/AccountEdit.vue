@@ -5,8 +5,8 @@
                 <v-card-title>Account {{account.username}}@{{account.domain}} </v-card-title>
                 <v-card-text>
                     <span v-if="!account.id">
-                        <v-text-field v-model="account.username" label="Username" placeholder="Username"></v-text-field>
-                         <v-select v-model="account.domain" data-app="true" :items="domainNames" label="Destination-Domain"></v-select>
+                        <v-text-field v-model="account.username" v-on:keyup="checkatsymbole" label="Username" placeholder="Username"></v-text-field>
+                         <v-select v-model="account.domain" ref="domain" data-app="true" :items="domainNames" label="Destination-Domain"></v-select>
                         <v-text-field v-on:keyup="passwordFieldChanged()" v-on:change="passwordFieldChanged()" v-model="account.password" label="Password" :type="passwordFieldType" placeholder="Password"></v-text-field>
                         <v-btn @click="generateRandomPassword()" x-small>Random Password</v-btn>
                     </span>
@@ -39,6 +39,13 @@
     export default {
         name: 'AliasEdit',
         methods: {
+            checkatsymbole: function (r) {
+                if(r.key == "@") {
+                    this.account.username = this.account.username.substr(0, this.account.username.length -1 );
+                    this.$refs.domain.focus();
+                }
+
+            },
             generateRandomPassword: function () {
                 this.passwordFieldType = "password"
                 this.passwordFieldType = "text"

@@ -8,6 +8,8 @@ import Accounts from "../views/Accounts";
 import AccountEdit from "../views/AccountEdit";
 import TLSPolicy from "../views/TLSPolicy";
 import TLSPolicyEdit from "../views/TLSPolicyEdit";
+import Login from "../views/Login"
+import Logout from "../views/Logout";
 
 Vue.use(VueRouter)
 
@@ -54,8 +56,23 @@ const routes = [
   },
   {
     path: '/',
+    name: 'Home2',
+    component: Home
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: Logout
   },
   {
     path: '/about',

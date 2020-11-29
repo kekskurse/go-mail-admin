@@ -7,24 +7,9 @@ You just need to download one binary file to the server and run it, no other dep
 The HTTP interface doesn't validate your data, it's just another way to access your database.
 # Installation
 
-Note: For installing the Go-Mail-Admin so it's always running and for adding it to the autostart there is a [step by step howto](https://github.com/kekskurse/go-mail-admin/blob/master/docs/install.md).
+Download the last Debian Package from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) and install it.
 
-Download the last binary from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) to your Ubuntu/Debian mailserver. 
-
-Set the environment variables to configure the Go-Mail-Admin, e.g.:
-```
-export GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail"
-export GOMAILADMIN_APIKEY=abc
-export GOMAILADMIN_APISECRET=abc
-export GOMAILADMIN_PORT=3001
-```
-
-Then you can start the Go-Mail-Admin with the following command
-```
-./go-mail-admin-with-gui-<VERSION>
-```
-
-After that you can open the gui via http at http://servername:3001 (or your specified custom port)
+See:  [Installation Doku](https://github.com/kekskurse/go-mail-admin/blob/master/docs/install.md).
 
 # Usage
 ## Config
@@ -33,11 +18,16 @@ The script can be configured with environment variables. The following settings 
 | Key | Required | Default | Notice |
 | --- | ---      | --- |   --- |
 | GOMAILADMIN_DB | Yes | | Database connection string like 'username:password@tcp(127.0.0.1:3306)/database' |
-| GOMAILADMIN_APIKEY | No | | API Key for HTTP-Basic-Auth (just use if APISECRET  is set too)  |
-| GOMAILADMIN_APISECRET | No | | API Secret for HTTP-Basic-Auth (just use if APIKEY is set too) |
 | GOMAILADMIN_ADDRESS | No | ":" (all) | IP address to bind to |
 | GOMAILADMIN_PORT | No | 3001 | Port at which is bound (default: 3001) |
 | GOMAILADMIN_CATCHALL | No | Off | If set to "On" the catchall feature will be enabled, its necessary that source_username in alias can be NULL |
+| GOMAILADMIN_REDIS_SERVER | No | localhost | Host for redis connection |
+| GOMAILADMIN_REDIS_PORT | No | 6379 | Port for redis connection |
+| GOMAILADMIN_AUTH_METHOD | Yes | None | How to authorisate, possible `None`, `Username`, `HTTPBasicAuth` [more info](https://github.com/kekskurse/go-mail-admin/blob/master/docs/auth.md) |
+| GOMAILADMIN_AUTH_HTTPBasic_Username | No | None | If HTTPBasicAuth is enabled, the username |
+| GOMAILADMIN_AUTH_HTTPBasic_Password | No | None | If HTTPBasicAuth is enabled, the password |
+| GOMAILADMIN_AUTH_Username_Username | No | None | If Username auth is enabled, the username |
+| GOMAILADMIN_AUTH_Username_Password | No | None | If Username auth is enabled, the password |
 
 ## API
 
