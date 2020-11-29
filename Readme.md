@@ -7,6 +7,8 @@ You just need to download one binary file to the server and run it, no other dep
 The HTTP interface doesn't validate your data, it's just another way to access your database.
 # Installation
 
+Download the last Debian Package from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) and install it.
+
 See:  [Installation Doku](https://github.com/kekskurse/go-mail-admin/blob/master/docs/install.md).
 
 It can be installed with a Debina Package.
