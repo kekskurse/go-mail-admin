@@ -183,7 +183,7 @@ func (a *auth) createToken() (token string, e error) {
 
 	token = string(b)
 
-	a.Redis.set("auth_"+token, "1", 60)
+	a.Redis.set("auth_"+token, "1", 60*15)
 
 	return
 
