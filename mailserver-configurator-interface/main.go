@@ -130,10 +130,11 @@ func main() {
 	log.Println("Start Go Mail Admin")
 	connectToDb()
 	router := defineRouter()
+	address := getConfigVariable("ADDRESS")
 	port := getConfigVariable("PORT")
 	if port == "" {
 		port = "3001"
 	}
-	http.ListenAndServe(":" + port, router)
+	http.ListenAndServe(address + ":" + port, router)
 	fmt.Println("Done")
 }
