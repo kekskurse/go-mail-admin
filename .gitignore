@@ -1,6 +1,7 @@
 gin-bin
 .vscode/
 !go-mail-admin.service
+opt/
 .idea/
 bin/
 !bin/.gitkeep
