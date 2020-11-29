@@ -1,6 +1,5 @@
 gin-bin
 .vscode/
-go-mail-admin*
 !go-mail-admin.service
 .idea/
 bin/
