@@ -59,6 +59,9 @@ export default {
         return Api().put("/api/v1/account/password ", {"id": id, "password": newpassword})
     },
     featureToggles() {
-        return Api().get("/api/v1/features")
+        return Api().get("/public/v1/features")
+    },
+    login(username, password) {
+        return Api().post("/public/v1/login/username", {"username": username, "password": password})
     }
 }

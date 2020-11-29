@@ -96,7 +96,7 @@ func defineRouter() chi.Router {
 		AllowedOrigins: []string{"*"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "X-APITOKEN", "x-apitoken"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
@@ -133,6 +133,7 @@ func defineRouter() chi.Router {
 	publicRouten := chi.NewRouter()
 
 	publicRouten.Post("/v1/login/username", loginUsername)
+	publicRouten.Post("/v1/features", getFeatureToggles)
 
 
 	r.Mount("/api", apiRouten)

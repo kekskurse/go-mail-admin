@@ -7,6 +7,7 @@ import (
 
 type featureToggles struct {
 	CatchAll bool `json:"catchall"`
+	AuthMethode string `json:"auth"`
 }
 
 func NewFeatureToggleFromEnv() *featureToggles {
@@ -16,6 +17,8 @@ func NewFeatureToggleFromEnv() *featureToggles {
 	if getConfigVariable("CATCHALL") == "On" {
 		ft.CatchAll = true
 	}
+
+	ft.AuthMethode = authConfig.Method
 
 	return &ft
 }

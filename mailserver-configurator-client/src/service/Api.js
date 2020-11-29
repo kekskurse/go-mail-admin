@@ -10,12 +10,26 @@ export default() => {
     } else {
         console.log("Use static API URL: " + url)
     }
-    return axios.create({
+    var header = {};
+    header["Accept"] = 'application/json';
+    header["Content-Type"] = 'application/json';
+    if(localStorage.getItem("token") != null) {
+        header["X-APITOKEN"] = localStorage.getItem("token");
+    }
+
+    let a;
+     a = axios.create({
         baseURL: url,
         withCredentials: false,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+        headers: header
+    });
+    a.interceptors.response.use(response => {
+        return response;
+    }, error => {
+        if (error.response.status === 401) {
+            location.href = "/#/login";
         }
-    })
+        return error;
+    });
+    return a;
 }

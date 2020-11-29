@@ -4,8 +4,6 @@ You can setup the auth method via the enviroment varieable `GOMAILADMIN_AUTH_MET
 * None
 * HTTPBasicAuth
 * Username
-* AdminMail
-
 
 Based on that Setting some additional parameters are needed
 
