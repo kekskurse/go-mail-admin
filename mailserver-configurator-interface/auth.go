@@ -1,7 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/unrolled/render"
+	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"log"
 	"strings"
@@ -14,15 +18,24 @@ type auth struct {
 	HTTPBasicAuthUsername string
 	HTTPBasicAuthPassword string
 
+	//For Username
+	Username string
+	Password string
+
 	//For Admin Mail
 	AdminMailMails []string
 	AdminMailAPIKeys []string
 
+
+	//Redis
+	Redis redisConnection
+
 }
 
 // NewAuthFromEnv load the env based of go-mail-admin to make it a bit easyer to use
-func NewAuthFromEnv() auth {
+func NewAuthFromEnv(r redisConnection) auth {
 	a := auth{}
+	a.Redis = r
 
 	authMethod := getConfigVariableWithDefault("AUTH_METHOD", "")
 
@@ -55,6 +68,12 @@ func NewAuthFromEnv() auth {
 	if a.Method == "" {
 		log.Println("No Auth Method is set. Auth Method is forced to None. Please read the auth doc and set a variable. It is DEPRECATED to start go-mail-admin without!")
 		a.Method = "None"
+	}
+
+	if a.Method == "Username" {
+		log.Println("Auth: Enabled Username")
+		a.Username = getConfigVariable("AUTH_USERNAME_USERNAME")
+		a.Password = getConfigVariable("AUTH_USERNAME_PASSWORD")
 	}
 
 	if a.Method == "AdminMail" {
@@ -111,6 +130,19 @@ func (a *auth) Handle(next http.Handler) http.Handler {
 			return
 		}
 
+		if a.Method == "Username" {
+			token := r.Header.Get("X-APITOKEN")
+			v, _ := a.Redis.get("auth_"+token)
+			if v  == "1" {
+				next.ServeHTTP(w, r)
+				return
+			} else {
+				w.WriteHeader(http.StatusUnauthorized)
+				w.Write([]byte("Token invalide"))
+				return
+			}
+		}
+
 		if a.Method == "AdminMail" {
 			panic("Auth method AdminMail is not done yet")
 		}
@@ -138,3 +170,57 @@ func (a *auth) httpBasicAuthCheck(username string, password string) (ok bool, er
 
 	return
 }
+
+/*
+	Call this function to create a valide token for api-keys
+ */
+func (a *auth) createToken() (token string, e error) {
+	letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+	b := make([]rune, 24)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+
+	token = string(b)
+
+	a.Redis.set("auth_"+token, "1", 60)
+
+	return
+
+}
+
+type LoginData struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type LoginResult struct {
+	Login bool `json:"login"`
+	Token string `json:"token"`
+}
+
+
+func loginUsername(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	loginResult := LoginResult{}
+	loginResult.Login = false
+
+	var loginData LoginData
+	json.Unmarshal(body, &loginData)
+
+	if authConfig.Username == loginData.Username && authConfig.Password == loginData.Password {
+		loginResult.Login = true
+		loginResult.Token, _ = authConfig.createToken()
+	}
+
+	ren := render.New()
+	ren.JSON(w, http.StatusOK, loginResult)
+}
+

@@ -88,8 +88,8 @@ func defineRouter() chi.Router {
 	} else {
 		log.Println("Run without Basic auth, make sure to protect the API at another layer")
 	}*/
-
-	authConfig = NewAuthFromEnv()
+	redis := newRedisConnection()
+	authConfig = NewAuthFromEnv(redis)
 
 	cors := cors.New(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
@@ -130,7 +130,13 @@ func defineRouter() chi.Router {
 	r.Get("/ping", http_ping)
 	r.Get("/status", http_status)
 
+	publicRouten := chi.NewRouter()
+
+	publicRouten.Post("/v1/login/username", loginUsername)
+
+
 	r.Mount("/api", apiRouten)
+	r.Mount("/public", publicRouten)
 
 	//Static files
 	statikFS, err := fs.New()
