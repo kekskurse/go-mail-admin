@@ -340,7 +340,34 @@ paths:
       responses:
         '200':
           description: Successful response
-  /api/v1/features:
+  /public/v1/login/username:
+    post:
+      tags:
+      - Auth
+      description: Login and get a Token
+      summary: Login and get a Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: test
+                  description: Your username
+                password:
+                  type: string
+                  example: test
+                  description: Your Password
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auth'
+  /public/v1/features:
     get:
       tags:
       - Config
@@ -424,6 +451,17 @@ components:
           type: boolean
           example: false
           description: Catchall can be add to the Database with value NULL
+    Auth:
+      type: object
+      properties:
+        login:
+          type: boolean
+          example: true
+          description: Login successfull or not
+        token:
+          type: string
+          example: XVlBzgbaiCMRAjWwhTHctcuA
+          description: Token to send as X-APITOKEN with each request, valide for 15 minutes
     TLSpolicy:
       type: object
       properties:

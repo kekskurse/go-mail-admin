@@ -35,7 +35,7 @@ All features avalible in the Frontend are also in the API. The API current works
 
 
 ## Frontend
-There is a VueJS frontend you can use to see and configure your mailserver. You can access it by opening http://yourmailserver.de:3001, if you set an API key and secret you need to performe a HTTP Basic Auth.
+There is a VueJS frontend you can use to see and configure your mailserver. You can access it by opening http://yourmailserver.de:3001, if you set an API key and secret you need to performe a HTTP Basic Auth or login via webgui.
 
 ### Screenshots
 *Dashboard*
