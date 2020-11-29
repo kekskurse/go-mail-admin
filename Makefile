@@ -22,11 +22,12 @@ interface-build:
 
 interface-compile:
 	echo "Compiling for every OS and Platform"
+	cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public
 	rm -f ./bin/*
-	cd ./mailserver-configurator-interface; GOOS=linux GOARCH=386 go build -o ../bin/go-mail-admin-with-gui-linux-386 ./
-	cd ./mailserver-configurator-interface; GOOS=linux GOARM=7 GOARCH=arm go build -o ../bin/go-mail-admin-with-gui-linux-arm ./
-	cd ./mailserver-configurator-interface; GOOS=linux GOARCH=arm64 go build -o ../bin/go-mail-admin-with-gui-linux-arm64 ./
-	cd ./mailserver-configurator-interface; GOOS=linux GOARCH=amd64 go build -o ../bin/go-mail-admin-with-gui-linux-amd64 ./
+	cd ./mailserver-configurator-interface; CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o ../bin/go-mail-admin-with-gui-linux-386 ./
+	cd ./mailserver-configurator-interface; CGO_ENABLED=0 GOOS=linux GOARM=7 GOARCH=arm go build -o ../bin/go-mail-admin-with-gui-linux-arm ./
+	cd ./mailserver-configurator-interface; CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ../bin/go-mail-admin-with-gui-linux-arm64 ./
+	cd ./mailserver-configurator-interface; CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../bin/go-mail-admin-with-gui-linux-amd64 ./
 
 deb-i386:
 	cp ./bin/go-mail-admin-with-gui-linux-386 ./resources/debpkg-i386/opt/go-mail-admin/go-mail-admin-with-gui-linux-386
