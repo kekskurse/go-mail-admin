@@ -7,9 +7,9 @@ You just need to download one binary file to the server and run it, no other dep
 The HTTP interface doesn't validate your data, it's just another way to access your database.
 # Installation
 
-Note: For installing the Go-Mail-Admin so it's always running and for adding it to the autostart there is a [step by step howto](https://github.com/kekskurse/go-mail-admin/blob/master/docs/install.md).
+See:  [Installation Doku](https://github.com/kekskurse/go-mail-admin/blob/master/docs/install.md).
 
-
+It can be installed with a Debina Package.
 
 # Usage
 ## Config
@@ -32,6 +32,7 @@ The script can be configured with environment variables. The following settings 
 | GOMAILADMIN_AUTH_HTTPBasic_PAssword | No | None | If HTTPBasicAuth is enabled, the password |
 | GOMAILADMIN_AUTH_USERNAME_USERNAME | No | None | If Username auth is enabled, the username |
 | GOMAILADMIN_AUTH_USERNAME_PASSWORD | No | None | If Username auth is enabled, the password |
+
 ## API
 
 All features avalible in the Frontend are also in the API. The API current works with HTTP Basic Auth. [The documenation is avalible here](https://mrin9.github.io/OpenAPI-Viewer/#/load/https%3A%2F%2Fraw.githubusercontent.com%2Fkekskurse%2Fgo-mail-admin%2Fmaster%2Fdocs%2Fopenapi.json).

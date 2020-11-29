@@ -3,6 +3,7 @@ You can setup the auth method via the enviroment varieable `GOMAILADMIN_AUTH_MET
 
 * None
 * HTTPBasicAuth
+* Username
 * AdminMail
 
 
@@ -17,20 +18,11 @@ To Access the API or the Webfrontend a HTTP-Basic-Auth authorisation is requeste
 * GOMAILADMIN_AUTH_HTTPBasic_Username -> Username
 * GOMAILADMIN_AUTH_HTTPBasic_Password -> Password
 
-## AdminMail
-To access the Webfrontend a user can login with a e-mail/password combination from the Mailserver. If there are no E-Mail Accounts at the Mailserver this method will not work! To access the API an API-Key can send as HTTP-Header.
+## Username
+Access via Username/Password with the Webfronend.
 
-To setup a login via the GUI add the following environment Variable 
-
-* GOMAILADMIN_AUTH_AdminMail_MAIL
-
-e.g.
-
-```
-GOMAILADMIN_AUTH_AdminMail_MAIL=admin@example.de
-```
-
-To access only the API the following environment Variable, if it is not set or empty a API-Access is not possible (or you need to login via E-Mail and Password)
+* GOMAILADMIN_AUTH_USERNAME_USERNAME -> Username
+* GOMAILADMIN_AUTH_USERNAME_PASSWORD -> Password
 
 ## DontStart
 Just the default, the Project will stop with a panic.
