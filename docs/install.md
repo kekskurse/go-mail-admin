@@ -1,6 +1,6 @@
 # Installation from Debian Package
 
-## Download Binary
+## Download Deb
 Download the go-mail-admin deb file from the Release Page and load it to your server, for debian with
 ```
 wget https://github.com/kekskurse/go-mail-admin/releases/download/v0.1.3/go-mail-admin-amd64-0.1.3.deb
@@ -64,6 +64,21 @@ Make the binary executable
 chmod u+x /home/gomailadmin/go-mail-admin-*
 ```
 
+## Run Binary
+Set the environment variables to configure the Go-Mail-Admin, e.g.:
+```
+export GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail"
+export GOMAILADMIN_AUTH_METHOD=None
+export GOMAILADMIN_PORT=3001
+```
+
+Then you can start the Go-Mail-Admin with the following command
+```
+./go-mail-admin-with-gui-<VERSION>
+```
+
+After that you can open the gui via http at http://servername:3001 (or your specified custom port)
+
 ## Create Service file
 Create a new file called /etc/systemd/system/go-mail-admin.service
 ```
@@ -80,6 +95,8 @@ systemctl start go-mail-admin.service
 ```
 
 After that you can call the gui via http at http://servername:3001
+
+
 
 # Update
 

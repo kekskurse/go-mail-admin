@@ -14,6 +14,7 @@ interface-install-deps:
 	go get github.com/go-chi/chi
 	go get github.com/rakyll/statik
 	go get github.com/99designs/basicauth-go
+	go get github.com/gomodule/redigo/redis
 
 interface-build:
 	cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public

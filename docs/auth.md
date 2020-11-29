@@ -27,16 +27,10 @@ To setup a login via the GUI add the following environment Variable
 e.g.
 
 ```
-GOMAILADMIN_AUTH_AdminMail_MAIL=admin@example.de,othermail@example.com
+GOMAILADMIN_AUTH_AdminMail_MAIL=admin@example.de
 ```
 
 To access only the API the following environment Variable, if it is not set or empty a API-Access is not possible (or you need to login via E-Mail and Password)
-
-* GOMAILADMIN_AUTH_AdminMail_API
-
-```
-GOMAILADMIN_AUTH_AdminMail_MAIL=onerealysecretapikey,anotherevenmoreapikey,adshfioöqweshrguiwergtzfhqw7p
-```
 
 ## DontStart
 Just the default, the Project will stop with a panic.
