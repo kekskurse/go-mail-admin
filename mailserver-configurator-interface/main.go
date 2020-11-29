@@ -3,11 +3,12 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/go-chi/chi/middleware"
-	"github.com/rakyll/statik/fs"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/go-chi/chi/middleware"
+	"github.com/rakyll/statik/fs"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
@@ -42,12 +43,12 @@ func connectToDb() {
 }
 
 func getConfigVariable(name string) string {
-	value := os.Getenv("GOMAILADMIN_"+name)
+	value := os.Getenv("GOMAILADMIN_" + name)
 	return value
 }
 
 func getConfigVariableWithDefault(name string, defaultValue string) string {
-	value := os.Getenv("GOMAILADMIN_"+name)
+	value := os.Getenv("GOMAILADMIN_" + name)
 	if value == "" {
 		return defaultValue
 	}
@@ -89,9 +90,6 @@ func defineRouter() chi.Router {
 	}*/
 
 	authConfig = NewAuthFromEnv()
-
-
-
 
 	cors := cors.New(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
@@ -149,7 +147,12 @@ func main() {
 	log.Println("Start Go Mail Admin")
 	connectToDb()
 	router := defineRouter()
-	port := getConfigVariableWithDefault("PORT", "3001")
-	http.ListenAndServe(":" + port, router)
+	address := getConfigVariable("ADDRESS")
+	port := getConfigVariable("PORT")
+	if port == "" {
+		port = "3001"
+	}
+	http.ListenAndServe(address+":"+port, router)
+
 	fmt.Println("Done")
 }

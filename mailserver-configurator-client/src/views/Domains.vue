@@ -9,7 +9,7 @@
                 <v-card-text>
                     <v-text-field
                             v-model="newDomain"
-                            placeholder="domain.de"
+                            placeholder="example.com"
                     ></v-text-field>
                     <v-btn @click="addDomain()">Add Domain</v-btn><br><br>
 
