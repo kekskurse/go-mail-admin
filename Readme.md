@@ -11,8 +11,6 @@ Download the last Debian Package from the [Release Page](https://github.com/keks
 
 See:  [Installation Doku](https://github.com/kekskurse/go-mail-admin/blob/master/docs/install.md).
 
-It can be installed with a Debina Package.
-
 # Usage
 ## Config
 The script can be configured with environment variables. The following settings are possible:
@@ -20,8 +18,6 @@ The script can be configured with environment variables. The following settings 
 | Key | Required | Default | Notice |
 | --- | ---      | --- |   --- |
 | GOMAILADMIN_DB | Yes | | Database connection string like 'username:password@tcp(127.0.0.1:3306)/database' |
-| GOMAILADMIN_APIKEY | No | | API Key for HTTP-Basic-Auth (just use if APISECRET  is set too)  |
-| GOMAILADMIN_APISECRET | No | | API Secret for HTTP-Basic-Auth (just use if APIKEY is set too) |
 | GOMAILADMIN_ADDRESS | No | ":" (all) | IP address to bind to |
 | GOMAILADMIN_PORT | No | 3001 | Port at which is bound (default: 3001) |
 | GOMAILADMIN_CATCHALL | No | Off | If set to "On" the catchall feature will be enabled, its necessary that source_username in alias can be NULL |
@@ -29,11 +25,9 @@ The script can be configured with environment variables. The following settings 
 | GOMAILADMIN_REDIS_PORT | No | 6379 | Port for redis connection |
 | GOMAILADMIN_AUTH_METHOD | Yes | None | How to authorisate, possible `None`, `Username`, `HTTPBasicAuth` [more info](https://github.com/kekskurse/go-mail-admin/blob/master/docs/auth.md) |
 | GOMAILADMIN_AUTH_HTTPBasic_Username | No | None | If HTTPBasicAuth is enabled, the username |
-| GOMAILADMIN_AUTH_HTTPBasic_PAssword | No | None | If HTTPBasicAuth is enabled, the password |
-| GOMAILADMIN_AUTH_HTTPBasic_Username | No | None | If HTTPBasicAuth is enabled, the username |
-| GOMAILADMIN_AUTH_HTTPBasic_PAssword | No | None | If HTTPBasicAuth is enabled, the password |
-| GOMAILADMIN_AUTH_USERNAME_USERNAME | No | None | If Username auth is enabled, the username |
-| GOMAILADMIN_AUTH_USERNAME_PASSWORD | No | None | If Username auth is enabled, the password |
+| GOMAILADMIN_AUTH_HTTPBasic_Password | No | None | If HTTPBasicAuth is enabled, the password |
+| GOMAILADMIN_AUTH_Username_Username | No | None | If Username auth is enabled, the username |
+| GOMAILADMIN_AUTH_Username_Password | No | None | If Username auth is enabled, the password |
 
 ## API
 

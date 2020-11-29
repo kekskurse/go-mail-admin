@@ -71,8 +71,8 @@ func NewAuthFromEnv(r redisConnection) auth {
 
 	if a.Method == "Username" {
 		log.Println("Auth: Enabled Username")
-		a.Username = getConfigVariable("AUTH_USERNAME_USERNAME")
-		a.Password = getConfigVariable("AUTH_USERNAME_PASSWORD")
+		a.Username = getConfigVariable("AUTH_Username_Username")
+		a.Password = getConfigVariable("AUTH_Username_Password")
 	}
 
 	/*if a.Method == "AdminMail" {
