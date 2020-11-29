@@ -223,3 +223,13 @@ func loginUsername(w http.ResponseWriter, r *http.Request) {
 	ren.JSON(w, http.StatusOK, loginResult)
 }
 
+func logout(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("X-APITOKEN")
+
+	authConfig.Redis.delete("auth_"+token)
+
+	w.WriteHeader(http.StatusUnauthorized)
+	//w.Write([]byte(""))
+}
+
+

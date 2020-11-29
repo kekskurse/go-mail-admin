@@ -63,5 +63,8 @@ export default {
     },
     login(username, password) {
         return Api().post("/public/v1/login/username", {"username": username, "password": password})
+    },
+    logout() {
+        return Api().post("/api/v1/logout")
     }
 }

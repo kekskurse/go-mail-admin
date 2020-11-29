@@ -32,7 +32,7 @@ If one of the old environment Variable is set (GOMAILADMIN_APIKEY, GOMAILADMIN_A
 
 In the feature the Project will not start with the old environment Variable.
 
-## 0.1.0 to 0.1.X
+## 0.1.0 to 0.1.Xgi
 Only HTTP-Basic-Auth is available, you can use it by setting the following environment Variable
 
 * GOMAILADMIN_APIKEY -> Username

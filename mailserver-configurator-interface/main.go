@@ -127,6 +127,7 @@ func defineRouter() chi.Router {
 	apiRouten.Put("/v1/tlspolicy", updateTLSPolicy)
 	apiRouten.Delete("/v1/tlspolicy", deleteTLSPolicy)
 	apiRouten.Get("/v1/features", getFeatureToggles)
+	apiRouten.Post("/v1/logout", logout)
 	r.Get("/ping", http_ping)
 	r.Get("/status", http_status)
 

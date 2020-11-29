@@ -9,6 +9,7 @@ import AccountEdit from "../views/AccountEdit";
 import TLSPolicy from "../views/TLSPolicy";
 import TLSPolicyEdit from "../views/TLSPolicyEdit";
 import Login from "../views/Login"
+import Logout from "../views/Logout";
 
 Vue.use(VueRouter)
 
@@ -67,6 +68,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: Logout
   },
   {
     path: '/about',

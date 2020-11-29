@@ -63,3 +63,17 @@ func (r *redisConnection) get(key string) (string, error) {
 
 	return s, nil
 }
+
+func (r *redisConnection) delete(key string) (error) {
+	// get conn and put back when exit from method
+	conn := r.pool.Get()
+	defer conn.Close()
+
+	_, err := redis.String(conn.Do("DEL", key))
+	if err != nil {
+		log.Printf("ERROR: fail get key %s, error %s", key, err.Error())
+		return  err
+	}
+
+	return nil
+}
