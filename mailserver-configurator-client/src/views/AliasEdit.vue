@@ -9,9 +9,11 @@
                         placeholder="Source Username"
                         label="Source Username"
                         :disabled="catchall == 1"
+                        v-on:keyup="checkatsymbole"
                         ></v-text-field>
                     <v-checkbox v-if="this.toggle_catchall" v-model="catchall" label="Catch all"></v-checkbox>
                     <v-select
+                            ref="domain"
                             :items="domainNames"
                             label="Source Domain"
                             v-model="alias.source_domain"
@@ -42,6 +44,13 @@
     export default {
         name: 'AliasEdit',
         methods: {
+            checkatsymbole: function (r) {
+                if(r.key == "@") {
+                    this.alias.source_username = this.alias.source_username.substr(0, this.alias.source_username.length -1 );
+                    this.$refs.domain.focus();
+                }
+
+            },
             getFeatures: function () {
                 Client.featureToggles().then((res) => {
                    this.toggle_catchall = res.data.catchall;
