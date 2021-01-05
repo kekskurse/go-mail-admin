@@ -42,7 +42,12 @@
                         :single-select=true
                         v-model="selected"
                         show-select
-                ></v-data-table>
+                >
+                 <template v-slot:item.details.MXRecordCheck="{ item }">
+                        <v-chip color="green" v-if="item.enabled">Yes</v-chip>
+                        <v-chip color="red" v-if="!item.enabled">No</v-chip>
+                    </template>
+                </v-data-table>
                 <v-btn @click="removeDomain()" v-if="selected[0]">Remove selected Domain</v-btn><br><br>
             </v-card>
 

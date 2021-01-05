@@ -28,7 +28,7 @@ The script can be configured with environment variables. The following settings 
 | GOMAILADMIN_AUTH_HTTPBasic_Password | No | None | If HTTPBasicAuth is enabled, the password |
 | GOMAILADMIN_AUTH_Username_Username | No | None | If Username auth is enabled, the username |
 | GOMAILADMIN_AUTH_Username_Password | No | None | If Username auth is enabled, the password |
-| GOMAILADMIN_Check_DNS_RECORDS | No | Off | If set to "On" it will check MX/SPF/DMARC Records which each call of the Domainlist, this is slow! |
+| GOMAILADMIN_CHECK_DNS_RECORDS | No | Off | If set to "On" it will check MX/SPF/DMARC Records which each call of the Domainlist, this is slow! |
 
 ## API
 
