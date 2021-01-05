@@ -43,10 +43,31 @@
                         v-model="selected"
                         show-select
                 >
-                 <template v-slot:item.details.MXRecordCheck="{ item }">
-                        <v-chip color="green" v-if="item.enabled">Yes</v-chip>
-                        <v-chip color="red" v-if="!item.enabled">No</v-chip>
-                    </template>
+
+                <template v-slot:item.mx="{ item }">
+                    <span v-if="item.detail.RecordChecked">
+                        <v-chip color="green" v-if="item.detail.MXRecordCheck" style="width:100px;">Yes</v-chip>
+                        <v-chip color="red" v-if="!item.detail.MXRecordCheck" style="width:100px;">No</v-chip>
+                    </span>
+                    <v-chip v-if="!item.detail.RecordChecked" style="width:100px;">Unknown</v-chip>
+                </template>
+
+                <template v-slot:item.spf="{ item }">
+                    <span v-if="item.detail.RecordChecked">
+                        <v-chip color="green" v-if="item.detail.SPFRecordCheck" style="width:100px;">Yes</v-chip>
+                        <v-chip color="red" v-if="!item.detail.SPFRecordCheck" style="width:100px;">No</v-chip>
+                    </span>
+                    <v-chip v-if="!item.detail.RecordChecked" style="width:100px;">Unknown</v-chip>
+                </template>
+
+                <template v-slot:item.dmarc="{ item }">
+                    <span v-if="item.detail.RecordChecked">
+                        <v-chip color="green" v-if="item.detail.DMARCRecordCheck" style="width:100px;">Yes</v-chip>
+                        <v-chip color="red" v-if="!item.detail.DMARCRecordCheck" style="width:100px;">No</v-chip>
+                    </span>
+                    <v-chip v-if="!item.detail.RecordChecked" style="width:100px;">Unknown</v-chip>
+                </template>
+                
                 </v-data-table>
                 <v-btn @click="removeDomain()" v-if="selected[0]">Remove selected Domain</v-btn><br><br>
             </v-card>
@@ -67,9 +88,33 @@
     export default {
         name: 'Domain',
         methods: {
+            getDomainDetails: function () {
+                for(var i = 0; i < this.domains.length; i++) {
+                    Client.getDomainDetails(this.domains[i].domain).then((res) => {
+                        for(var i = 0; i < this.domains.length; i++) {
+                            if(this.domains[i].domain == res.data.domain_name) {
+                                this.domains[i].detail = res.data;
+                                console.log("Found Domain Details")
+                            }
+                        }
+                    });
+                }
+            },
+            getFetaturesToggle: function () {
+                Client.featureToggles().then((res) => {
+                    console.log(res.data); 
+                    if(res.data.showDomainDetails) {
+                        console.log("Show Domain Details");
+                        this.headers.push({"text": "MX-Record", "sortable": false, "value": "mx"});
+                        this.headers.push({"text": "SPF-Record", "sortable": false, "value": "spf"});
+                        this.headers.push({"text": "DMARC-Record", "sortable": false, "value": "dmarc"});
+                    }
+                });
+            },
             getDomains: function () {
                 Client.getDomains().then((res) => {
                    this.domains = res.data;
+                   this.getDomainDetails();
                 });
             },
             removeDomain: function() {
@@ -97,7 +142,8 @@
             }
         },
         mounted: function() {
-          this.getDomains();
+            this.getFetaturesToggle();
+            this.getDomains();
 
         },
         components: {
@@ -114,7 +160,8 @@
                     text: 'Domain',
                     sortable: true,
                     value: 'domain'
-                }
+                },
+                
             ],
             'search': '',
             'domains': [],

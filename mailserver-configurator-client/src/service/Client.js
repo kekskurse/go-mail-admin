@@ -10,6 +10,9 @@ export default {
     getDomains() {
         return Api().get("/api/v1/domain")
     },
+    getDomainDetails(domain) {
+        return Api().get("/api/v1/domain/"+domain)
+    },
     addDomain(domainname) {
       return Api().post("/api/v1/domain", {"domain": domainname})
     },

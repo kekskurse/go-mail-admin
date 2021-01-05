@@ -1,584 +1,103 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "version": "0.1.3",
-      "title": "go-mail-admin",
-      "description": "API Documentation for go-mail-admin."
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.1.3",
+    "title": "go-mail-admin",
+    "description": "API Documentation for go-mail-admin."
+  },
+  "paths": {
+    "/api/v1/domain": {
+      "get": {
+        "tags": [
+          "Domain"
+        ],
+        "summary": "Return all Domains",
+        "description": "Return all Domains",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Domain"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Domain"
+        ],
+        "summary": "Add a new Domain",
+        "description": "Add a new Domain",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "example": "example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain created"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Domain"
+        ],
+        "description": "Remove a Domain",
+        "summary": "Remove a Domain",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "example": "example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain removed"
+          }
+        }
+      }
     },
-    "paths": {
-      "/api/v1/domain": {
-        "get": {
-          "tags": [
-            "Domain"
-          ],
-          "summary": "Return all Domains",
-          "description": "Return all Domains",
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Domain"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "post": {
-          "tags": [
-            "Domain"
-          ],
-          "summary": "Add a new Domain",
-          "description": "Add a new Domain",
-          "requestBody": {
+    "/api/v1/domain/{domain}": {
+      "get": {
+        "tags": [
+          "Domain"
+        ],
+        "summary": "Return Domain Details",
+        "description": "Return Domain Details",
+        "responses": {
+          "200": {
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "domain": {
-                      "type": "string",
-                      "example": "example.com"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Domain created"
-            }
-          }
-        },
-        "delete": {
-          "tags": [
-            "Domain"
-          ],
-          "description": "Remove a Domain",
-          "summary": "Remove a Domain",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "domain": {
-                      "type": "string",
-                      "example": "example.com"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Domain removed"
-            }
-          }
-        }
-      },
-      "/api/v1/alias": {
-        "get": {
-          "tags": [
-            "Alias"
-          ],
-          "description": "Return all Aliases",
-          "summary": "Return all Aliases",
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Alias"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "post": {
-          "tags": [
-            "Alias"
-          ],
-          "description": "Create a new Alias",
-          "summary": "Create a new Alias",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "source_username": {
-                      "type": "string",
-                      "example": "mail"
-                    },
-                    "source_domain": {
-                      "type": "string",
-                      "example": "example.com"
-                    },
-                    "destination_username": {
-                      "type": "string",
-                      "example": "something"
-                    },
-                    "destination_domain": {
-                      "type": "string",
-                      "example": "example.de"
-                    },
-                    "enabled": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response"
-            }
-          }
-        },
-        "put": {
-          "tags": [
-            "Alias"
-          ],
-          "description": "Update a Alias",
-          "summary": "Update a Alias",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1,
-                      "description": "ID of the Alias to update"
-                    },
-                    "source_username": {
-                      "type": "string",
-                      "example": "mail"
-                    },
-                    "source_domain": {
-                      "type": "string",
-                      "example": "example.com"
-                    },
-                    "destination_username": {
-                      "type": "string",
-                      "example": "something"
-                    },
-                    "destination_domain": {
-                      "type": "string",
-                      "example": "example.de"
-                    },
-                    "enabled": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response"
-            }
-          }
-        },
-        "delete": {
-          "tags": [
-            "Alias"
-          ],
-          "description": "Remove a Alias",
-          "summary": "Remove a Alias",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "domain": {
-                      "type": "integer",
-                      "example": 1
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Alias removed"
-            }
-          }
-        }
-      },
-      "/api/v1/account": {
-        "get": {
-          "tags": [
-            "Account"
-          ],
-          "description": "Return all Accounts",
-          "summary": "Return all Accounts",
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Account"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "post": {
-          "tags": [
-            "Account"
-          ],
-          "description": "Create a new Account",
-          "summary": "Create a new Account",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "username": {
-                      "type": "string",
-                      "example": "admin"
-                    },
-                    "domain": {
-                      "type": "string",
-                      "example": "example.com"
-                    },
-                    "password": {
-                      "type": "string"
-                    },
-                    "quota": {
-                      "type": "integer",
-                      "example": 0
-                    },
-                    "enabled": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "sendonly": {
-                      "type": "boolean",
-                      "example": false
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response"
-            }
-          }
-        },
-        "delete": {
-          "tags": [
-            "Account"
-          ],
-          "description": "Remove a Account",
-          "summary": "Remove a Account",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "domain": {
-                      "type": "integer",
-                      "example": 1
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Alias removed"
-            }
-          }
-        },
-        "put": {
-          "tags": [
-            "Account"
-          ],
-          "description": "Update a Account",
-          "summary": "Update a Account",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1,
-                      "description": "ID of the Alias to update"
-                    },
-                    "quota": {
-                      "type": "integer",
-                      "example": 0
-                    },
-                    "enabled": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "sendonly": {
-                      "type": "boolean",
-                      "example": false
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response"
-            }
-          }
-        }
-      },
-      "/api/v1/account/password": {
-        "put": {
-          "tags": [
-            "Account"
-          ],
-          "description": "Update a Account Password",
-          "summary": "Update a Account Password",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1,
-                      "description": "ID of the Alias to update"
-                    },
-                    "password": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Password changed"
-            }
-          }
-        }
-      },
-      "/api/v1/tlspolicy": {
-        "get": {
-          "tags": [
-            "TLSPolicy"
-          ],
-          "description": "Return all TLSPolicies",
-          "summary": "Return all TLSPolicies",
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/TLSpolicy"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "post": {
-          "tags": [
-            "TLSPolicy"
-          ],
-          "description": "Create a new TLSPolicy",
-          "summary": "Create a new TLSPolicy",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "domain": {
-                      "type": "string",
-                      "example": "example.com"
-                    },
-                    "policy": {
-                      "type": "string",
-                      "example": "dane"
-                    },
-                    "params": {
-                      "type": "string",
-                      "example": "match=*.example.com"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response"
-            }
-          }
-        },
-        "delete": {
-          "tags": [
-            "TLSPolicy"
-          ],
-          "description": "Remove a Policy",
-          "summary": "Remove a Policy",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "domain": {
-                      "type": "integer",
-                      "example": 1
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Policy removed"
-            }
-          }
-        },
-        "put": {
-          "tags": [
-            "TLSPolicy"
-          ],
-          "description": "Update a Policy",
-          "summary": "Update a Policy",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1,
-                      "description": "ID of the Policy to update"
-                    },
-                    "domain": {
-                      "type": "string",
-                      "example": "example.com"
-                    },
-                    "policy": {
-                      "type": "string",
-                      "example": "dane"
-                    },
-                    "params": {
-                      "type": "string",
-                      "example": "match=*.example.com"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response"
-            }
-          }
-        }
-      },
-      "/public/v1/login/username": {
-        "post": {
-          "tags": [
-            "Auth"
-          ],
-          "description": "Login and get a Token",
-          "summary": "Login and get a Token",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "username": {
-                      "type": "string",
-                      "example": "test",
-                      "description": "Your username"
-                    },
-                    "password": {
-                      "type": "string",
-                      "example": "test",
-                      "description": "Your Password"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Auth"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/public/v1/features": {
-        "get": {
-          "tags": [
-            "Config"
-          ],
-          "description": "Return FEature Toggles",
-          "summary": "Return FEature Toggles",
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Features"
-                  }
+                  "$ref": "#/components/schemas/DomainDetails"
                 }
               }
             }
@@ -586,138 +105,674 @@
         }
       }
     },
-    "components": {
-      "schemas": {
-        "Domain": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "example": 1
-            },
-            "domain": {
-              "type": "string",
-              "example": "example.com"
+    "/api/v1/alias": {
+      "get": {
+        "tags": [
+          "Alias"
+        ],
+        "description": "Return all Aliases",
+        "summary": "Return all Aliases",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Alias"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Alias"
+        ],
+        "description": "Create a new Alias",
+        "summary": "Create a new Alias",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "source_username": {
+                    "type": "string",
+                    "example": "mail"
+                  },
+                  "source_domain": {
+                    "type": "string",
+                    "example": "example.com"
+                  },
+                  "destination_username": {
+                    "type": "string",
+                    "example": "something"
+                  },
+                  "destination_domain": {
+                    "type": "string",
+                    "example": "example.de"
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
             }
           }
         },
-        "Account": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "example": 1
-            },
-            "username": {
-              "type": "string",
-              "example": "admin"
-            },
-            "domain": {
-              "type": "string",
-              "example": "example.de"
-            },
-            "quota": {
-              "type": "integer",
-              "example": 0
-            },
-            "enabled": {
-              "type": "boolean",
-              "example": true
-            },
-            "sendonly": {
-              "type": "boolean",
-              "example": false
-            },
-            "print": {
-              "type": "string",
-              "example": "admin@example.com",
-              "description": "Just to print in gui"
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Alias"
+        ],
+        "description": "Update a Alias",
+        "summary": "Update a Alias",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "ID of the Alias to update"
+                  },
+                  "source_username": {
+                    "type": "string",
+                    "example": "mail"
+                  },
+                  "source_domain": {
+                    "type": "string",
+                    "example": "example.com"
+                  },
+                  "destination_username": {
+                    "type": "string",
+                    "example": "something"
+                  },
+                  "destination_domain": {
+                    "type": "string",
+                    "example": "example.de"
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
             }
           }
         },
-        "Alias": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "example": 1
-            },
-            "source_username": {
-              "type": "string",
-              "example": "mail"
-            },
-            "source_domain": {
-              "type": "string",
-              "example": "example.com"
-            },
-            "destination_username": {
-              "type": "string",
-              "example": "something"
-            },
-            "destination_domain": {
-              "type": "string",
-              "example": "example.com"
-            },
-            "enabled": {
-              "type": "boolean",
-              "example": true
-            },
-            "print_source": {
-              "type": "string",
-              "example": "mail@example.com"
-            },
-            "print_destination": {
-              "type": "string",
-              "example": "something@example.com"
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Alias"
+        ],
+        "description": "Remove a Alias",
+        "summary": "Remove a Alias",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
             }
           }
         },
-        "Features": {
-          "type": "object",
-          "properties": {
-            "catchall": {
-              "type": "boolean",
-              "example": false,
-              "description": "Catchall can be add to the Database with value NULL"
+        "responses": {
+          "200": {
+            "description": "Alias removed"
+          }
+        }
+      }
+    },
+    "/api/v1/account": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "description": "Return all Accounts",
+        "summary": "Return all Accounts",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "description": "Create a new Account",
+        "summary": "Create a new Account",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "admin"
+                  },
+                  "domain": {
+                    "type": "string",
+                    "example": "example.com"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "quota": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "sendonly": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
             }
           }
         },
-        "Auth": {
-          "type": "object",
-          "properties": {
-            "login": {
-              "type": "boolean",
-              "example": true,
-              "description": "Login successfull or not"
-            },
-            "token": {
-              "type": "string",
-              "example": "XVlBzgbaiCMRAjWwhTHctcuA",
-              "description": "Token to send as X-APITOKEN with each request, valide for 15 minutes"
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "description": "Remove a Account",
+        "summary": "Remove a Account",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
             }
           }
         },
-        "TLSpolicy": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "example": 1
-            },
-            "domain": {
-              "type": "string",
-              "example": "example.com"
-            },
-            "policy": {
-              "type": "string",
-              "example": "dane"
-            },
-            "params": {
-              "type": "string",
-              "example": "match=*.example.com"
+        "responses": {
+          "200": {
+            "description": "Alias removed"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "description": "Update a Account",
+        "summary": "Update a Account",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "ID of the Alias to update"
+                  },
+                  "quota": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "sendonly": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/v1/account/password": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "description": "Update a Account Password",
+        "summary": "Update a Account Password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "ID of the Alias to update"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password changed"
+          }
+        }
+      }
+    },
+    "/api/v1/tlspolicy": {
+      "get": {
+        "tags": [
+          "TLSPolicy"
+        ],
+        "description": "Return all TLSPolicies",
+        "summary": "Return all TLSPolicies",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TLSpolicy"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "TLSPolicy"
+        ],
+        "description": "Create a new TLSPolicy",
+        "summary": "Create a new TLSPolicy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "example": "example.com"
+                  },
+                  "policy": {
+                    "type": "string",
+                    "example": "dane"
+                  },
+                  "params": {
+                    "type": "string",
+                    "example": "match=*.example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TLSPolicy"
+        ],
+        "description": "Remove a Policy",
+        "summary": "Remove a Policy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Policy removed"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "TLSPolicy"
+        ],
+        "description": "Update a Policy",
+        "summary": "Update a Policy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "ID of the Policy to update"
+                  },
+                  "domain": {
+                    "type": "string",
+                    "example": "example.com"
+                  },
+                  "policy": {
+                    "type": "string",
+                    "example": "dane"
+                  },
+                  "params": {
+                    "type": "string",
+                    "example": "match=*.example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/public/v1/login/username": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Login and get a Token",
+        "summary": "Login and get a Token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "test",
+                    "description": "Your username"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "test",
+                    "description": "Your Password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Auth"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/v1/features": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "description": "Return FEature Toggles",
+        "summary": "Return FEature Toggles",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Features"
+                }
+              }
             }
           }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "DomainDetails": {
+        "type": "object",
+        "properties": {
+          "domain_name": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "MXRecordCheck": {
+            "type": "boolean",
+            "example": false
+          },
+          "SPFRecordCheck": {
+            "type": "boolean",
+            "example": false
+          },
+          "DMARCRecordCheck": {
+            "type": "boolean",
+            "example": false
+          },
+          "RecordChecked": {
+            "type": "boolean",
+            "example": false,
+            "description": "true if checks are performent"
+          }
+        }
+      },
+      "Domain": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "domain": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "details": {
+            "$ref": "#/components/schemas/DomainDetails"
+          }
+        }
+      },
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "username": {
+            "type": "string",
+            "example": "admin"
+          },
+          "domain": {
+            "type": "string",
+            "example": "example.de"
+          },
+          "quota": {
+            "type": "integer",
+            "example": 0
+          },
+          "enabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "sendonly": {
+            "type": "boolean",
+            "example": false
+          },
+          "print": {
+            "type": "string",
+            "example": "admin@example.com",
+            "description": "Just to print in gui"
+          }
+        }
+      },
+      "Alias": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "source_username": {
+            "type": "string",
+            "example": "mail"
+          },
+          "source_domain": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "destination_username": {
+            "type": "string",
+            "example": "something"
+          },
+          "destination_domain": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "enabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "print_source": {
+            "type": "string",
+            "example": "mail@example.com"
+          },
+          "print_destination": {
+            "type": "string",
+            "example": "something@example.com"
+          }
+        }
+      },
+      "Features": {
+        "type": "object",
+        "properties": {
+          "catchall": {
+            "type": "boolean",
+            "example": false,
+            "description": "Catchall can be add to the Database with value NULL"
+          },
+          "showDomainDetails": {
+            "type": "boolean",
+            "example": true,
+            "description": "Show Record in the GUI"
+          }
+        }
+      },
+      "Auth": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "boolean",
+            "example": true,
+            "description": "Login successfull or not"
+          },
+          "token": {
+            "type": "string",
+            "example": "XVlBzgbaiCMRAjWwhTHctcuA",
+            "description": "Token to send as X-APITOKEN with each request, valide for 15 minutes"
+          }
+        }
+      },
+      "TLSpolicy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "domain": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "policy": {
+            "type": "string",
+            "example": "dane"
+          },
+          "params": {
+            "type": "string",
+            "example": "match=*.example.com"
+          }
+        }
+      }
+    }
   }
+}

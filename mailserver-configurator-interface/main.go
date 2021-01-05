@@ -123,6 +123,7 @@ func defineRouter() chi.Router {
 
 	publicRouten.Post("/v1/login/username", loginUsername)
 	publicRouten.Post("/v1/features", getFeatureToggles)
+	publicRouten.Get("/v1/features", getFeatureToggles)
 
 
 	r.Mount("/api", apiRouten)
