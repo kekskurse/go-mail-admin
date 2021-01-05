@@ -24,6 +24,7 @@ func newDomainDetails (domainName string) DomainDetails {
 	d.SPFRecordCheck = false
 	d.DMARCRecordCheck = false
 	d.RecordChecked = true
+	d.DKIMCheck = false
 
 	//varieables
 	d.DomainName = domainName
@@ -33,6 +34,7 @@ func newDomainDetails (domainName string) DomainDetails {
 	d.checkMXRecord()
 	d.checkSPFRecord()
 	d.checkDMARCRecord()
+	d.checkDKIMCRecord()
 
 	return d
 }
@@ -45,6 +47,7 @@ type DomainDetails struct {
 	SPFRecordCheck bool
 	DMARCRecordCheck bool
 	RecordChecked bool
+	DKIMCheck bool
 }
 
 func (d *DomainDetails) readPostfixConfig() {
@@ -100,6 +103,22 @@ func (d *DomainDetails) checkDMARCRecord() {
 	for _, record := range rs {
 		if record == "v=DMARC1; p=reject;" {
 			d.DMARCRecordCheck = true
+		}
+	}
+}
+
+func (d *DomainDetails) checkDKIMCRecord() {
+	log.Println("Check DKMI Record")
+
+	rs, err := net.LookupTXT(getConfigVariable("DKIM_SELECTOR")+"._domainkey."+d.DomainName)
+	if err != nil {
+		log.Println("DMARC Record check failed")
+		return
+	}
+
+	for _, record := range rs {
+		if record == getConfigVariable("DKIM_VALUE") {
+			d.DKIMCheck = true
 		}
 	}
 }

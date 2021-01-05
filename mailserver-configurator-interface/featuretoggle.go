@@ -23,7 +23,7 @@ func NewFeatureToggleFromEnv() *featureToggles {
 	if getConfigVariableWithDefault("SHOW_DNS_RECORDS", "On") == "On" {
 		ft.ShowDomainRecords = true
 	}
-	
+
 
 	ft.AuthMethode = authConfig.Method
 

@@ -68,6 +68,14 @@
                     <v-chip v-if="!item.detail.RecordChecked" style="width:100px;">Unknown</v-chip>
                 </template>
                 
+                <template v-slot:item.dkmi="{ item }">
+                    <span v-if="item.detail.RecordChecked">
+                        <v-chip color="green" v-if="item.detail.DKIMCheck" style="width:100px;">Yes</v-chip>
+                        <v-chip color="red" v-if="!item.detail.DKIMCheck" style="width:100px;">No</v-chip>
+                    </span>
+                    <v-chip v-if="!item.detail.RecordChecked" style="width:100px;">Unknown</v-chip>
+                </template>
+
                 </v-data-table>
                 <v-btn @click="removeDomain()" v-if="selected[0]">Remove selected Domain</v-btn><br><br>
             </v-card>
@@ -108,6 +116,7 @@
                         this.headers.push({"text": "MX-Record", "sortable": false, "value": "mx"});
                         this.headers.push({"text": "SPF-Record", "sortable": false, "value": "spf"});
                         this.headers.push({"text": "DMARC-Record", "sortable": false, "value": "dmarc"});
+                        this.headers.push({"text": "DKMI-Record", "sortable": false, "value": "dkmi"});
                     }
                 });
             },

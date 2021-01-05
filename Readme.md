@@ -30,6 +30,8 @@ The script can be configured with environment variables. The following settings 
 | GOMAILADMIN_AUTH_Username_Password | No | None | If Username auth is enabled, the password |
 | GOMAILADMIN_CHECK_DNS_RECORDS | No | Off | If set to "On" it will check MX/SPF/DMARC Records which each call of the Domainlist, this is slow! |
 | GOMAILADMIN_SHOW_DNS_RECORDS | No | On | If set to "Off" the Domain Records MX/SPF/DMARC will not shown in the gui |
+| GOMAILADMIN_DKIM_SELECTOR | No | None | Selector to check DKIM record |
+| GOMAILADMIN_DKIM_VALUE | No | None | Value of the DKIM record |
 
 ## API
 
