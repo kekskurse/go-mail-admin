@@ -83,7 +83,7 @@ func (d *DomainDetails) checkSPFRecord() {
 		//panic(err)
 	}
 	for _, record := range rs {
-		if record == "v=spf1 a:mail.keks.cloud ?all" {
+		if record == "v=spf1 a:"+d.hostname+" ?all" {
 			d.SPFRecordCheck = true
 		}
 	}
