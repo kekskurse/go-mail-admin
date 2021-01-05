@@ -75,19 +75,6 @@ func defineRouter() chi.Router {
 	log.Println("Setup API-Routen")
 	r := chi.NewRouter()
 
-	//r.Use(basicauth.NewFromEnv("Need Auth", "GOMAILADMIN_USER"))
-	// @todo clean old basic auth lib code
-	//apiKey := getConfigVariable("APIKEY")
-	//apiSecret := getConfigVariable("APISECRET")
-
-	/*if apiKey != "" && apiSecret != "" {
-		r.Use(basicauth.New("MyRealm", map[string][]string{
-			apiKey: {apiSecret},
-		}))
-		log.Println("Enabled Basic auth for basic protection.")
-	} else {
-		log.Println("Run without Basic auth, make sure to protect the API at another layer")
-	}*/
 	redis := newRedisConnection()
 	authConfig = NewAuthFromEnv(redis)
 
@@ -111,6 +98,7 @@ func defineRouter() chi.Router {
 	apiRouten.Use(authConfig.Handle)
 
 	apiRouten.Get("/v1/domain", getDomains)
+	apiRouten.Get("/v1/domain/{domain}", getDomainDetails)
 	apiRouten.Post("/v1/domain", addDomain)
 	apiRouten.Delete("/v1/domain", deleteDomain)
 	apiRouten.Get("/v1/alias", getAliases)

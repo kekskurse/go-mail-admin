@@ -13,6 +13,7 @@ import (
 type Domain struct {
 	ID     int    `json:"id"`
 	Domain string `json:"domain"`
+	Details DomainDetails `json:"details"`
 }
 
 func getDomains(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +31,9 @@ func getDomains(w http.ResponseWriter, r *http.Request) {
 		err := result.Scan(&domain.ID, &domain.Domain)
 		if err != nil {
 			log.Fatal(err)
+		}
+		if getConfigVariable("Check_DNS_RECORDS") == "On" {
+			domain.Details = newDomainDetails(domain.Domain)
 		}
 		domains = append(domains, domain)
 	}
