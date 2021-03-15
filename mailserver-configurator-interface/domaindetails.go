@@ -83,10 +83,9 @@ func (d *DomainDetails) checkSPFRecord() {
 	if err != nil {
 		log.Println("SPF Record check failed")
 		return
-		//panic(err)
 	}
 	for _, record := range rs {
-		if record == "v=spf1 a:"+d.hostname+" ?all" {
+		if strings.Contains(record, "v=spf1 a:"+d.hostname) {
 			d.SPFRecordCheck = true
 		}
 	}
