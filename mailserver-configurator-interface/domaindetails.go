@@ -78,12 +78,14 @@ func (d *DomainDetails) checkMXRecord() {
 }
 
 func (d *DomainDetails) checkSPFRecord() {
-	log.Println("Check SPF Record")
+	log.Printf("Check SPF Record vor domain %s\r\n", d.DomainName)
 	rs, err := net.LookupTXT(d.DomainName)
 	if err != nil {
-		log.Println("SPF Record check failed")
+		log.Printf("SPF Record check failed for Domain %s with error: %v\r\n", d.DomainName, err)
 		return
 	}
+	log.Printf("Found SPF Records for Domain %s: %v\r\n", d.DomainName, rs)
+
 	for _, record := range rs {
 		if strings.Contains(record, "v=spf1 a:"+d.hostname) {
 			d.SPFRecordCheck = true
