@@ -27,7 +27,11 @@ export default() => {
         return response;
     }, error => {
         if (error.response.status === 401) {
-            location.href = "/#/login";
+            /*url = location.href
+            if(url.indexOf("#") > 0){
+
+            }*/
+            location.href = "#/login";
         }
         return error;
     });
