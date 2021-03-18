@@ -70,7 +70,7 @@ func (r *redisConnection) delete(key string) (error) {
 
 	_, err := redis.String(conn.Do("DEL", key))
 	if err != nil {
-		log.Error().Err(err).Msg(fmt.Sprintf("Failed to delete redis key >%s<", key))
+		log.Warn().Err(err).Msg(fmt.Sprintf("Failed to delete redis key >%s<", key))
 		return  err
 	}
 
