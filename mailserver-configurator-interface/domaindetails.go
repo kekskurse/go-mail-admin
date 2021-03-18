@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-chi/chi"
 	"gopkg.in/unrolled/render.v1"
 	"io/ioutil"
@@ -8,7 +9,7 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
-	"log"
+	"github.com/rs/zerolog/log"
 )
 
 func getDomainDetails(w http.ResponseWriter, r *http.Request)  {
@@ -61,59 +62,58 @@ func (d *DomainDetails) readPostfixConfig() {
 	hostnameline := re.FindAllString(string(dat), -1)[0]
 	hostnamearray := strings.Split(hostnameline, "=")
 	hostname := strings.Trim(hostnamearray[1], " ")
-	log.Println("Hostname: "+hostname)
 	d.hostname = hostname
 
 }
 
 func (d *DomainDetails) checkMXRecord() {
-	log.Println("Check MX Record")
+
 	mxrecords, _ := net.LookupMX(d.DomainName)
 	for _, mx := range mxrecords {
 		if(mx.Host == d.hostname+".") {
-			log.Println("Found MX valide Record for Domain "+d.DomainName)
+			log.Debug().Msg(fmt.Sprintf("Found MX valide Record for Domain %s",d.DomainName))
 			d.MXRecordCheck = true
 		}
 	}
 }
 
 func (d *DomainDetails) checkSPFRecord() {
-	log.Printf("Check SPF Record vor domain %s\r\n", d.DomainName)
+	log.Debug().Msg(fmt.Sprintf("Check SPF Record for Domain %s", d.DomainName))
 	rs, err := net.LookupTXT(d.DomainName)
 	if err != nil {
-		log.Printf("SPF Record check failed for Domain %s with error: %v\r\n", d.DomainName, err)
+		log.Error().Err(err).Msg(fmt.Sprintf("SPF Record check failed for Domain %s", d.DomainName))
 		return
 	}
-	log.Printf("Found SPF Records for Domain %s: %v\r\n", d.DomainName, rs)
-
 	for _, record := range rs {
 		if strings.Contains(record, "v=spf1 a:"+d.hostname) {
+			log.Debug().Msg(fmt.Sprintf("Found valide SPF record for Domain %s", d.DomainName))
 			d.SPFRecordCheck = true
 		}
 	}
 }
 
 func (d *DomainDetails) checkDMARCRecord() {
-	log.Println("Check DMARC Record")
+	log.Debug().Msg(fmt.Sprintf("Check DMARC Record for Domain %s", d.DomainName))
 	rs, err := net.LookupTXT("_dmarc."+d.DomainName)
 	if err != nil {
-		log.Println("DMARC Record check failed")
+		log.Error().Err(err).Msg("DMARC Record check failed")
 		return
 	}
 
 	for _, record := range rs {
 		if record == "v=DMARC1; p=reject;" {
+			log.Debug().Msg(fmt.Sprintf("Found valide DMARC record for Domain %s", d.DomainName))
 			d.DMARCRecordCheck = true
 		}
 	}
 }
 
 func (d *DomainDetails) checkDKIMCRecord() {
-	log.Println("Check DKMI Record")
+	log.Debug().Msg(fmt.Sprintf("Check DKMI Record for Domain %s", d.DomainName))
 
 	rs, err := net.LookupTXT(getConfigVariable("DKIM_SELECTOR")+"._domainkey."+d.DomainName)
 	if err != nil {
-		log.Println("DMARC Record check failed")
+		log.Error().Err(err).Msg(fmt.Sprintf("DMARC Record check failed for Domain %s", d.DomainName))
 		return
 	}
 

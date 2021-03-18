@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"io/ioutil"
-	"log"
+	"github.com/rs/zerolog/log"
 	"math/rand"
 	"net/http"
 	"time"
@@ -71,7 +71,7 @@ func getAccounts(w http.ResponseWriter, r *http.Request) {
 	result, err := db.Query("SELECT * FROM accounts ORDER BY id")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("Error execute query")
 	}
 	defer result.Close()
 
@@ -81,7 +81,7 @@ func getAccounts(w http.ResponseWriter, r *http.Request) {
 		var account = Account{}
 		err := result.Scan(&account.ID, &account.Username, &account.Domain, &account.Password, &account.Quota, &account.Enabled, &account.SendOnly)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal().Err(err).Msg("Error Scan query result")
 		}
 		account.Print = account.Username + "@" + account.Domain
 		accounts = append(accounts, account)

@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
+	"github.com/rs/zerolog/log"
 	"net/http"
 
 	"gopkg.in/unrolled/render.v1"
@@ -21,7 +21,7 @@ func getTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	result, err := db.Query("SELECT id, domain, policy, IFNULL(params, \"\") FROM tlspolicies ORDER BY id")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("Error while query tls")
 	}
 	defer result.Close()
 
@@ -31,7 +31,7 @@ func getTLSPolicy(w http.ResponseWriter, r *http.Request) {
 		var policy = TLSPolicy{}
 		err := result.Scan(&policy.ID, &policy.Domain, &policy.Policy, &policy.Params)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal().Err(err).Msg("Error while scanning tls query result")
 		}
 		policys = append(policys, policy)
 	}

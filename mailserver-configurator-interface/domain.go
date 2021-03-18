@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
+	"github.com/rs/zerolog/log"
 	"net/http"
 
 	"gopkg.in/unrolled/render.v1"
@@ -20,7 +20,7 @@ func getDomains(w http.ResponseWriter, r *http.Request) {
 	result, err := db.Query("SELECT * FROM domains ORDER BY id")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("Error execute query for domain")
 	}
 	defer result.Close()
 
@@ -30,7 +30,7 @@ func getDomains(w http.ResponseWriter, r *http.Request) {
 		var domain = Domain{}
 		err := result.Scan(&domain.ID, &domain.Domain)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal().Err(err).Msg("Error scanning Query Result for Domains")
 		}
 		if getConfigVariable("CHECK_DNS_RECORDS") == "On" {
 			domain.Details = newDomainDetails(domain.Domain)

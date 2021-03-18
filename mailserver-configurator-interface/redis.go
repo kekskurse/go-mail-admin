@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gomodule/redigo/redis"
-	"log"
-	"os"
+	"github.com/rs/zerolog/log"
 )
 type redisConnection struct {
 	pool *redis.Pool
@@ -17,14 +17,14 @@ func newRedisConnection() redisConnection {
 }
 
 func (r *redisConnection) initPool() {
+
 	r.pool = &redis.Pool{
 		MaxIdle:   80,
 		MaxActive: 12000,
 		Dial: func() (redis.Conn, error) {
 			conn, err := redis.Dial(getConfigVariableWithDefault("REDIS_NETWORK", "tcp"), getConfigVariableWithDefault("REDIS_ADDRESS", "localhost:6379"))
 			if err != nil {
-				log.Printf("ERROR: fail init redis pool: %s", err.Error())
-				os.Exit(1)
+				log.Fatal().Err(err).Msg("Fail init redis pool")
 			}
 			return conn, err
 		},
@@ -36,8 +36,7 @@ func (r *redisConnection) ping() {
 	defer conn.Close()
 	_, err := redis.String(conn.Do("PING"))
 	if err != nil {
-		log.Printf("ERROR: fail ping redis conn: %s", err.Error())
-		os.Exit(1)
+		log.Fatal().Err(err).Msg("Fail init redis pool")
 	}
 }
 
@@ -46,7 +45,7 @@ func (r *redisConnection) set(key string, val string, ttl int) {
 	defer conn.Close()
 	_, err := conn.Do("SET", key, val, "EX", ttl)
 	if err != nil {
-		panic("ERROR: fail set key "+key+", val "+val+", error "+err.Error())
+		log.Fatal().Err(err).Msg(fmt.Sprintf("Failed to set key >%s< with value >%s<", key, val))
 	}
 }
 
@@ -57,7 +56,7 @@ func (r *redisConnection) get(key string) (string, error) {
 
 	s, err := redis.String(conn.Do("GET", key))
 	if err != nil {
-		log.Printf("ERROR: fail get key %s, error %s", key, err.Error())
+		log.Warn().Err(err).Msg(fmt.Sprintf("Failed to get redis key >%s<", key))
 		return "", err
 	}
 
@@ -71,7 +70,7 @@ func (r *redisConnection) delete(key string) (error) {
 
 	_, err := redis.String(conn.Do("DEL", key))
 	if err != nil {
-		log.Printf("ERROR: fail get key %s, error %s", key, err.Error())
+		log.Error().Err(err).Msg(fmt.Sprintf("Failed to delete redis key >%s<", key))
 		return  err
 	}
 

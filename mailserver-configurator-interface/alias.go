@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
+	"github.com/rs/zerolog/log"
 	"net/http"
 
 	"gopkg.in/unrolled/render.v1"
@@ -25,7 +25,7 @@ func getAliases(w http.ResponseWriter, r *http.Request) {
 	result, err := db.Query("SELECT * FROM aliases ORDER BY id")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("Error execute Query for Aliases")
 	}
 	defer result.Close()
 
@@ -35,7 +35,7 @@ func getAliases(w http.ResponseWriter, r *http.Request) {
 		var alias = Alias{}
 		err := result.Scan(&alias.ID, &alias.SourceUsername, &alias.SourceDomain, &alias.DestinationUsername, &alias.DestinationDomain, &alias.Enabled)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal().Err(err).Msg("Error scan query result for aliases")
 		}
 
 		if alias.SourceUsername != nil {

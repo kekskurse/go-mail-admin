@@ -2,8 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
-	"log"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"net/http"
 	"os"
 
@@ -20,26 +20,26 @@ import (
 var db *sql.DB
 
 func connectToDb() {
-	log.Println("Try to connect to Database")
+	log.Debug().Msg("Try to connect to Database")
 	dbString := getConfigVariable("DB")
 	if dbString == "" {
-		log.Fatal("No DB Connection string set")
+		log.Fatal().Msg("No DB Connection string set")
 	}
 	var err error
 	db, err = sql.Open("mysql", dbString)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("Can`t connect to db")
 	}
 
-	log.Println("Ping Database")
+	log.Debug().Msg("Ping Database")
 
 	err = db.Ping()
 	if err != nil {
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
-	log.Println("Connection to Database ok")
+	log.Debug().Msg("Connection to Database ok")
 }
 
 func getConfigVariable(name string) string {
@@ -72,7 +72,7 @@ func http_status(w http.ResponseWriter, r *http.Request) {
 var authConfig auth
 
 func defineRouter() chi.Router {
-	log.Println("Setup API-Routen")
+	log.Debug().Msg("Setup API-Routen")
 	r := chi.NewRouter()
 
 	redis := newRedisConnection()
@@ -132,7 +132,7 @@ func defineRouter() chi.Router {
 	//Static files
 	statikFS, err := fs.New()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	}
 
 	r.Handle("/*", http.StripPrefix("", http.FileServer(statikFS)))
@@ -141,7 +141,8 @@ func defineRouter() chi.Router {
 }
 
 func main() {
-	log.Println("Start Go Mail Admin")
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	log.Debug().Msg("Start Go Mail Admin")
 	connectToDb()
 	router := defineRouter()
 	address := getConfigVariable("ADDRESS")
@@ -149,7 +150,8 @@ func main() {
 	if port == "" {
 		port = "3001"
 	}
-	http.ListenAndServe(address+":"+port, router)
+	err := http.ListenAndServe(address+":"+port, router)
+	log.Error().Err(err).Msg("HTTP Server stop")
 
-	fmt.Println("Done")
+	log.Debug().Msg("Done, Shotdown")
 }

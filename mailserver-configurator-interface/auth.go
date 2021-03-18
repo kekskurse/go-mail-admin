@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/unrolled/render"
 	"io/ioutil"
-	"log"
+	"github.com/rs/zerolog/log"
 	"math/rand"
 	"net/http"
 )
@@ -52,51 +52,28 @@ func NewAuthFromEnv(r redisConnection) auth {
 		authMethod = "HTTPBasicAuth"
 		httpBasicAuthUsername = apiKey
 		httpBasicAuthPassword = apiSecret
-		log.Println("WARNING! The old Enviroment varieable GOMAILADMIN_APIKEY or GOMAILADMIN_APISECRET are set. The Auth method is forced to HTTPBasicAuth, please read the new auth docs to change your configuration")
+		log.Warn().Msg("The old Enviroment varieable GOMAILADMIN_APIKEY or GOMAILADMIN_APISECRET are set. The Auth method is forced to HTTPBasicAuth, please read the new auth docs to change your configuration")
 		// At a panic in the feature
 	}
 
 	a.Method = authMethod
 
 	if a.Method == "HTTPBasicAuth" {
-		log.Println("Auth: Enabled HTTPBasicAuth")
+		log.Debug().Msg("Auth: Enabled HTTPBasicAuth")
 		a.HTTPBasicAuthUsername = httpBasicAuthUsername
 		a.HTTPBasicAuthPassword = httpBasicAuthPassword
 	}
 
 	if a.Method == "" {
-		log.Println("No Auth Method is set. Auth Method is forced to None. Please read the auth doc and set a variable. It is DEPRECATED to start go-mail-admin without!")
+		log.Debug().Msg("No Auth Method is set. Auth Method is forced to None. Please read the auth doc and set a variable. It is DEPRECATED to start go-mail-admin without!")
 		a.Method = "None"
 	}
 
 	if a.Method == "Username" {
-		log.Println("Auth: Enabled Username")
+		log.Debug().Msg("Auth: Enabled Username")
 		a.Username = getConfigVariable("AUTH_Username_Username")
 		a.Password = getConfigVariable("AUTH_Username_Password")
 	}
-
-	/*if a.Method == "AdminMail" {
-		log.Println("Auth: Enabled AdminMail")
-		adminMails := strings.Split(getConfigVariable("AUTH_AdminMail_MAIL"), ",")
-		apiKeys := strings.Split(getConfigVariable("AUTH_AdminMail_API"), ",")
-
-		if len(adminMails) == 1 && adminMails[0] == "" {
-			log.Println("Auth: AdminMail is used but not Admin E-Mail address is set, no one can use the webfrontend")
-		} else {
-			a.AdminMailMails = adminMails
-		}
-
-		if len(apiKeys) == 1 && apiKeys[0] == "" {
-			log.Println("Auth: AdminMail is used but not API Keys are set, if you want to use the API you have to login via mail/password")
-		} else {
-			a.AdminMailAPIKeys = apiKeys
-		}
-
-		if len(a.AdminMailAPIKeys) == 0 && len(a.AdminMailMails) == 0 {
-			panic("Auth: AdminMail is used but no Admin E-Mail address or API-Key is set")
-		}
-
-	}*/
 
 	return a
 }
@@ -113,7 +90,7 @@ func (a *auth) Handle(next http.Handler) http.Handler {
 
 			ok, err := a.httpBasicAuthCheck(username, password)
 			if err != nil {
-				log.Panic(err)
+				log.Fatal().Err(err).Msg("Error check auth")
 			}
 			if !ok {
 				a.httpBasicAuthUnauthorized(w, "MyRealm")
@@ -165,7 +142,7 @@ func (a *auth) httpBasicAuthCheck(username string, password string) (ok bool, er
 		return
 	}
 
-	log.Println("HTTP Basic auth for user >" + username + "< failed")
+	log.Debug().Msg(fmt.Sprintf("HTTP Basic auth for user >%s< failed", username))
 
 	return
 }
