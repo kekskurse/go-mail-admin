@@ -21,8 +21,8 @@ The script can be configured with environment variables. The following settings 
 | GOMAILADMIN_ADDRESS | No | ":" (all) | IP address to bind to |
 | GOMAILADMIN_PORT | No | 3001 | Port at which is bound (default: 3001) |
 | GOMAILADMIN_CATCHALL | No | Off | If set to "On" the catchall feature will be enabled, its necessary that source_username in alias can be NULL |
-| GOMAILADMIN_REDIS_SERVER | No | localhost | Host for redis connection |
-| GOMAILADMIN_REDIS_PORT | No | 6379 | Port for redis connection |
+| REDIS_NETWORK | No | tcp | Network how to connect to redis, "tcp" or "unix" |
+| REDIS_ADDRESS | No | localhost:6379 | Redis address to connect, if REDIS_NETWORK is tcp an ip/hostname and port for unix /path/to/socket |
 | GOMAILADMIN_AUTH_METHOD | Yes | None | How to authorisate, possible `None`, `Username`, `HTTPBasicAuth` [more info](https://github.com/kekskurse/go-mail-admin/blob/master/docs/auth.md) |
 | GOMAILADMIN_AUTH_HTTPBasic_Username | No | None | If HTTPBasicAuth is enabled, the username |
 | GOMAILADMIN_AUTH_HTTPBasic_Password | No | None | If HTTPBasicAuth is enabled, the password |

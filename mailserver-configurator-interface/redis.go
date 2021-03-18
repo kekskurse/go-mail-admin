@@ -21,7 +21,7 @@ func (r *redisConnection) initPool() {
 		MaxIdle:   80,
 		MaxActive: 12000,
 		Dial: func() (redis.Conn, error) {
-			conn, err := redis.Dial("tcp", getConfigVariableWithDefault("REDIS_SERVER", "localhost")+":"+getConfigVariableWithDefault("REDIS_PORT", "6379"))
+			conn, err := redis.Dial(getConfigVariableWithDefault("REDIS_NETWORK", "tcp"), getConfigVariableWithDefault("REDIS_ADDRESS", "localhost:6379"))
 			if err != nil {
 				log.Printf("ERROR: fail init redis pool: %s", err.Error())
 				os.Exit(1)
