@@ -62,11 +62,12 @@ version:
 run:
 	GO111MODULE=off GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" go run ./mailserver-configurator-interface
 
-test:
+init-test:
 	docker-compose down
 	docker-compose rm
 	docker-compose up -d
 	sleep 10
+test:
 	GO111MODULE=off GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" go test ./mailserver-configurator-interface
 
 
