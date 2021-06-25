@@ -8,7 +8,7 @@ jobs:
       - name: Build the stack
         run: docker-compose up -d
       - name: Deps
-        run: interface-install-deps
+        run: make interface-install-deps
       - name: Test
         run: make test
 
