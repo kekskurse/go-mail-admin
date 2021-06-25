@@ -53,6 +53,12 @@ func addDomain(w http.ResponseWriter, r *http.Request) {
 	var domain Domain
 	json.Unmarshal(body, &domain)
 
+	if domain.Domain == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Domain cant be empty"))
+		return
+	}
+
 	stmt, err := db.Prepare("INSERT INTO domains(domain) VALUES(?)")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
