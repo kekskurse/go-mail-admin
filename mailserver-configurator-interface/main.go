@@ -23,7 +23,7 @@ func connectToDb() {
 	log.Debug().Msg("Try to connect to Database")
 	dbString := getConfigVariable("DB")
 	if dbString == "" {
-		log.Fatal().Msg("No DB Connection string set")
+		log.Fatal().Msg("No DB Connection string set, set enviroment varieable GOMAILADMIN_DB")
 	}
 	var err error
 	db, err = sql.Open("mysql", dbString)
