@@ -17,7 +17,7 @@ type Domain struct {
 }
 
 func getDomains(w http.ResponseWriter, r *http.Request) {
-	result, err := db.Query("SELECT * FROM domains ORDER BY id")
+	result, err := db.Query("SELECT id, domain FROM domains ORDER BY id")
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error execute query for domain")

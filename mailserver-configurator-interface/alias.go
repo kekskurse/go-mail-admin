@@ -22,7 +22,7 @@ type Alias struct {
 }
 
 func getAliases(w http.ResponseWriter, r *http.Request) {
-	result, err := db.Query("SELECT * FROM aliases ORDER BY id")
+	result, err := db.Query("SELECT id, source_username, source_domain, destination_username, destination_domain, enabled FROM aliases ORDER BY id")
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error execute Query for Aliases")

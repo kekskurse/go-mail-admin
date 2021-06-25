@@ -68,7 +68,7 @@ type AccountWithPassword struct {
 }
 
 func getAccounts(w http.ResponseWriter, r *http.Request) {
-	result, err := db.Query("SELECT * FROM accounts ORDER BY id")
+	result, err := db.Query("SELECT id, username, domain, password, quota, enabled, sendonly FROM accounts ORDER BY id")
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error execute query")
