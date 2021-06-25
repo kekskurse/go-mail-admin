@@ -10,7 +10,7 @@ jobs:
       - name: Deps
         run: make interface-install-deps
       - name: Statik
-        run: ~/go/bin/statik -f -src=./public
+        run: mkdir public; touch public/index.html; ~/go/bin/statik -f -src=./public
       - name: Test
         run: make test
 
