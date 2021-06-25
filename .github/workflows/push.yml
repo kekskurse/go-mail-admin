@@ -9,6 +9,8 @@ jobs:
         run: docker-compose up -d
       - name: Deps
         run: make interface-install-deps
+      - name: Statik
+        run: ~/go/bin/statik -f -src=./public
       - name: Test
         run: make test
 
