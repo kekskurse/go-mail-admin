@@ -16,6 +16,7 @@ interface-install-deps:
 	go get github.com/99designs/basicauth-go
 	go get github.com/gomodule/redigo/redis
 	go get -u github.com/rs/zerolog/log
+	go get gopkg.in/unrolled/render.v1
 
 interface-build:
 	cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public
