@@ -16,6 +16,7 @@ func TestGetEmptyDomainList(t *testing.T) {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
+	resetDBForTest()
 	connectToDb()
 
 

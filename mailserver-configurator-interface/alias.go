@@ -60,7 +60,11 @@ func addAlias(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var alias Alias
-	json.Unmarshal(body, &alias)
+	err = json.Unmarshal(body, &alias)
+
+	if err != nil {
+		log.Info().Err(err).Msgf("Cant parse alias request")
+	}
 
 
 	if getConfigVariable("CATCHALL") != "On" {
