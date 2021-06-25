@@ -1,0 +1,17 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  mariadb:
+    image: mariadb:10.6
+    ports:
+      - 3306:3306
+    environment:
+      - MARIADB_DATABASE=vmail
+      - MARIADB_USER=vmail
+      - MARIADB_PASSWORD=vmailpassword
+      - MARIADB_ROOT_PASSWORD=example
+    volumes:
+      - ./resources/mariadb-database:/docker-entrypoint-initdb.d/
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
