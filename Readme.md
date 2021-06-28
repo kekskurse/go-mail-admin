@@ -5,6 +5,8 @@ The project will connect to the MYSQL database to read and write the config.
 You just need to download one binary file to the server and run it, no other dependencies. However, you may want to add an nginx with SSL in front of it, or make it only available via VPN.
 
 The HTTP interface doesn't validate your data, it's just another way to access your database.
+
+In the new Debian 10 Version of the Tutorial the vmail user hast just select access. You need to give the user more priviliges or add another usr. [issue](https://github.com/kekskurse/go-mail-admin/issues/35)
 # Installation
 
 Download the last Debian Package from the [Release Page](https://github.com/kekskurse/go-mail-admin/releases) and install it.
@@ -31,7 +33,7 @@ The script can be configured with environment variables. The following settings 
 | GOMAILADMIN_CHECK_DNS_RECORDS | No | Off | If set to "On" it will check MX/SPF/DMARC Records which each call of the Domainlist, this is slow! |
 | GOMAILADMIN_SHOW_DNS_RECORDS | No | On | If set to "Off" the Domain Records MX/SPF/DMARC will not shown in the gui |
 | GOMAILADMIN_DKIM_SELECTOR | No | None | Selector to check DKIM record |
-| GOMAILADMIN_DKIM_VALUE | No | None | Value of the DKIM record |
+| GOMAILADMIN_DKIM_VALUE | No | None | Value of the DKIM record [more info](https://github.com/kekskurse/go-mail-admin/issues/29#issuecomment-802334758) |
 
 ## API
 
