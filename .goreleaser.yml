@@ -1,0 +1,60 @@
+# This is an example .goreleaser.yml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+before:
+  hooks:
+    # Vue JS Stuff
+    - make client-build
+    - make interface-copy-client
+    - make statik
+    # You may remove this if you don't use go modules.
+    #- go mod tidy
+    # you may remove this if you don't need go generate
+    #- go generate ./...
+builds:
+  - main: ./mailserver-configurator-interface
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      #- windows
+      #- darwin
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+nfpms:
+  - id: go-mail-admin
+    package_name: go-mail-admin
+    vendor: Kekskurse
+    homepage: https://www.kekskurse.de
+    maintainer: Kekskurse <hello@kekskurse.de>
+    description: "Webinterface to manage mailserver"
+    license: "GPL-3.0 License"
+    formats:
+      - deb
+    contents:
+      # Basic file that applies to all packagers
+      - src: configs/go-mail-admin.env
+        dst: /etc/go-mail-admin/go-mail-admin.env.sample
+      - src: init/go-mail-admin.service
+        dst: /etc/systemd/system/go-mail-admin.service
+    scripts:
+      preinstall: "scripts/preinstall.sh"
+      postinstall: "scripts/postinstall.sh"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+release:
+  draft: true
+  #prerelease: auto
+  prerelease: true

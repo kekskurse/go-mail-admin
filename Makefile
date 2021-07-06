@@ -22,6 +22,9 @@ interface-build:
 	cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public
 	cd ./mailserver-configurator-interface; go build -o ../go-mail-admin-with-gui ./
 
+statik:
+	cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public
+
 interface-compile:
 	echo "Compiling for every OS and Platform"
 	cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public

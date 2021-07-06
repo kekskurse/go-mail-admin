@@ -4,4 +4,5 @@ gin-bin
 opt/
 .idea/
 bin/
-!bin/.gitkeep
+!bin/.gitkeepdist/
+dist/

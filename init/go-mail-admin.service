@@ -1,0 +1,17 @@
+[Unit]
+Description=Go Mail Admin
+After=syslog.target
+
+[Service]
+Type=simple
+User=gomailadmin
+ExecStart=/usr/local/bin/go-mail-admin
+SyslogIdentifier=go-mail-admin
+StandardOutput=syslog
+StandardError=syslog
+Restart=always
+RestartSec=3
+EnvironmentFile=/etc/go-mail-admin/go-mail-admin.env
+
+[Install]
+WantedBy=multi-user.target
