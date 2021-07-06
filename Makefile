@@ -3,9 +3,6 @@ client-build:
 	cd ./mailserver-configurator-client; npm install
 	cd ./mailserver-configurator-client; npm run build
 
-goreleaser-vue:
-	mkdir ./mailserver-configurator-interface/public/
-	cp -r ./mailserver-configurator-client/dist/* ./mailserver-configurator-interface/public/
 
 interface-copy-client:
 	rm -r ./mailserver-configurator-interface/public/*
@@ -61,6 +58,15 @@ version:
 
 run:
 	GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" go run ./mailserver-configurator-interface
+
+gorelease-vue:
+	go get github.com/rakyll/statik
+	rm -f -r  ./mailserver-configurator-client/dist/
+	cd ./mailserver-configurator-client; npm install
+	cd ./mailserver-configurator-client; npm run build
+	mkdir ./mailserver-configurator-interface/public/
+	cp -r ./mailserver-configurator-client/dist/* ./mailserver-configurator-interface/public/
+	cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public
 
 init-test:
 	docker-compose down

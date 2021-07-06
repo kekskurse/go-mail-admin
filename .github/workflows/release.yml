@@ -23,16 +23,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.16
-      - name: make interface-install-deps
-        run: make interface-install-deps
-      - name: make client-build
-        run: make client-build
-      - name: make goreleaser-vue
-        run: make goreleaser-vue
-      - name: make statik
-        run: cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public
-      - name: tree
-        run: tree
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
@@ -40,7 +30,7 @@ jobs:
           # either 'goreleaser' (default) or 'goreleaser-pro'
           distribution: goreleaser
           version: latest
-          args: release --rm-dist
+          args: release --rm-dist --debug
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Your GoReleaser Pro key, if you are using the 'goreleaser-pro' distribution

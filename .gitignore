@@ -6,3 +6,4 @@ opt/
 bin/
 !bin/.gitkeepdist/
 dist/
+mailserver-configurator-client/package-lock.json
