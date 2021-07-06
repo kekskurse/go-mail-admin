@@ -6,6 +6,8 @@ before:
     - make client-build
     - make goreleaser-vue
     - make statik
+    # Until go mod works:
+    - make interface-install-deps
     # You may remove this if you don't use go modules.
     #- go mod tidy
     # you may remove this if you don't need go generate
