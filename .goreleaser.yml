@@ -3,10 +3,10 @@
 before:
   hooks:
     # Vue JS Stuff
-    - make interface-install-deps
-    - make client-build
-    - make goreleaser-vue
-    - make statik
+    #- make interface-install-deps
+    #- make client-build
+    #- make goreleaser-vue
+    #- make statik
     # You may remove this if you don't use go modules.
     - go mod tidy
     # you may remove this if you don't need go generate
