@@ -69,5 +69,8 @@ export default {
     },
     logout() {
         return Api().post("/api/v1/logout")
+    },
+    getVersion() {
+        return Api().get("/api/v1/version")
     }
 }

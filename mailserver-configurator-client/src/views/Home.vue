@@ -5,7 +5,7 @@
         <v-card style="margin-right: 10px; height: 100%;">
           <v-card-title>Go Mail Admin</v-card-title>
           <v-card-text>
-            Mail Server Admin GUI<br><br>
+            Mail Server Admin GUI (Version: {{version}})<br><br>
             <b>Fast Access</b><br>
             <v-list-item-group v-model="item" color="primary">
               <v-list-item to="/account/new">
@@ -111,12 +111,26 @@
 import DomainChart from "../components/DomainChart";
 import AliasChart from "../components/AliasChart";
 import AccountChart from "../components/AccountChart";
+import Client from "../service/Client";
 export default {
   name: 'Home',
   components: {
     DomainChart,
     AliasChart,
     AccountChart
-  }
+  },
+  methods: {
+    getVersion: function () {
+      Client.getVersion().then((res) => {
+        this.version = res.data.version
+      })
+    }
+  },
+  mounted: function() {
+    this.getVersion()
+  },
+  data: () => ({
+    version: "unknown"
+  })
 }
 </script>

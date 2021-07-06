@@ -35,3 +35,13 @@ func getFeatureToggles(w http.ResponseWriter, r *http.Request) {
 	ren := render.New()
 	ren.JSON(w, http.StatusOK, ft)
 }
+
+func getVersion(w http.ResponseWriter, r *http.Request) {
+	ren := render.New()
+	res := struct {
+		Version string `json:"version"`
+	}{
+		Version: version,
+	}
+	ren.JSON(w, http.StatusOK, res)
+}
