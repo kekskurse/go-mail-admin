@@ -1,7 +1,0 @@
-Package: go-mail-admin
-Version: 0.2.4
-Section: base
-Priority: optional
-Architecture: amd64
-Maintainer: hello@kekskurse.de
-Description: Run go-mail-admin gui
