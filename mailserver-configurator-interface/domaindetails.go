@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"gopkg.in/unrolled/render.v1"
 	"io/ioutil"
 	"net"
