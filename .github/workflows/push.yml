@@ -1,4 +1,4 @@
-name: docker-compose-actions-workflow
+name: go-mail-admin-commit
 on: push
 jobs:
   test:
@@ -7,8 +7,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the stack
         run: docker-compose up -d
-      - name: Deps
-        run: make interface-install-deps
       - name: Statik
         run: cd ./mailserver-configurator-interface; mkdir public; touch public/index.html; ~/go/bin/statik -f -src=./public
       - name: Test
