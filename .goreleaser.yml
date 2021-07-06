@@ -4,7 +4,7 @@ before:
   hooks:
     # Vue JS Stuff
     - make client-build
-    - make interface-copy-client
+    - make goreleaser-vue
     - make statik
     # You may remove this if you don't use go modules.
     #- go mod tidy
