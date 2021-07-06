@@ -14,6 +14,7 @@ builds:
   - main: ./mailserver-configurator-interface
     env:
       - CGO_ENABLED=0
+      - GO111MODULE=off
     goos:
       - linux
       #- windows
@@ -54,7 +55,7 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
-release:
-  draft: true
+#release:
+  #draft: true
   #prerelease: auto
-  prerelease: true
+  #prerelease: true
