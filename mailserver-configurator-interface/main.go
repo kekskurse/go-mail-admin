@@ -13,7 +13,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 
-	_ "./statik"
+	_ "gomailadmin/mailserver-configurator-interface/statik"
 	_ "github.com/go-sql-driver/mysql"
 )
 
