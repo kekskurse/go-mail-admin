@@ -3,6 +3,7 @@
 before:
   hooks:
     # Vue JS Stuff
+    - make interface-install-deps
     - make client-build
     - make goreleaser-vue
     - make statik

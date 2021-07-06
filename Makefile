@@ -12,14 +12,7 @@ interface-copy-client:
 	cp -r ./mailserver-configurator-client/dist/* ./mailserver-configurator-interface/public/
 
 interface-install-deps:
-	#go get github.com/go-sql-driver/mysql
-	#go get github.com/go-chi/cors
-	#go get github.com/unrolled/render
-	#go get github.com/go-chi/chi
 	go get github.com/rakyll/statik
-	#go get github.com/gomodule/redigo/redis
-	#go get -u github.com/rs/zerolog/log
-	#go get gopkg.in/unrolled/render.v1
 
 interface-build:
 	cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public
