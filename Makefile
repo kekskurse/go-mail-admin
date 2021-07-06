@@ -17,7 +17,6 @@ interface-install-deps:
 	go get github.com/unrolled/render
 	go get github.com/go-chi/chi
 	go get github.com/rakyll/statik
-	go get github.com/99designs/basicauth-go
 	go get github.com/gomodule/redigo/redis
 	go get -u github.com/rs/zerolog/log
 	go get gopkg.in/unrolled/render.v1
