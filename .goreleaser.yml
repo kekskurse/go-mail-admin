@@ -57,6 +57,6 @@ changelog:
       - '^docs:'
       - '^test:'
 release:
-  draft: true
+  draft: false
   #prerelease: auto
   prerelease: true
