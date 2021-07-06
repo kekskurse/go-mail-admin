@@ -68,7 +68,7 @@ version:
 	mv bin/go-mail-admin-with-gui-linux-386 bin/go-mail-admin-with-gui-linux-386-$(VERSION)
 
 run:
-	GO111MODULE=off GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" go run ./mailserver-configurator-interface
+	GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" go run ./mailserver-configurator-interface
 
 init-test:
 	docker-compose down
@@ -76,7 +76,7 @@ init-test:
 	docker-compose up -d
 	sleep 10
 test:
-	GO111MODULE=off GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" go test ./mailserver-configurator-interface
+	GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" go test ./mailserver-configurator-interface
 
 
 build: client-build interface-copy-client interface-install-deps interface-build
