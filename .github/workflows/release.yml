@@ -24,11 +24,17 @@ jobs:
           go-version: 1.16
       - name: Test
         run: echo $GOPATH
+        env:
+          GOPATH: /home/runner/go/
 
       - name: Deps
         run: make interface-install-deps
+        env:
+          GOPATH: /home/runner/go/
       - name: Test 2
         run: ls -lah $GOPATH
+        env:
+          GOPATH: /home/runner/go/
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
