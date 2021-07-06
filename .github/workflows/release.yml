@@ -35,6 +35,8 @@ jobs:
         run: ls -lah $GOPATH
         env:
           GOPATH: /home/runner/go/
+      - name: Test 3
+        run: ls -lah /opt/hostedtoolcache/go/1.16.5/x64/
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
