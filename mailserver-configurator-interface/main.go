@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rakyll/statik/fs"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 
 	_ "github.com/go-sql-driver/mysql"
