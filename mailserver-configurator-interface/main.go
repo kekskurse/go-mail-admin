@@ -13,8 +13,12 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 
-	_ "gomailadmin/mailserver-configurator-interface/statik"
 	_ "github.com/go-sql-driver/mysql"
+	_ "gomailadmin/mailserver-configurator-interface/statik"
+)
+
+var (
+	version                                = "development"
 )
 
 var db *sql.DB
@@ -143,6 +147,7 @@ func defineRouter() chi.Router {
 func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	log.Debug().Msg("Start Go Mail Admin")
+	log.Info().Msgf("Running version %v", version)
 	connectToDb()
 	router := defineRouter()
 	address := getConfigVariable("ADDRESS")
