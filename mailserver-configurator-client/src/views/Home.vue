@@ -5,7 +5,7 @@
         <v-card style="margin-right: 10px; height: 100%;">
           <v-card-title>Go Mail Admin</v-card-title>
           <v-card-text>
-            Mail Server Admin GUI (Version: {{version}})<br><br>
+            Mail Server Admin GUI (Version: {{version}}, <span v-if="newestVersion == 'unknown'" style="cursor: pointer;" @click="checkNewerVersion">Check for updates</span><span v-if="newestVersion != 'unknown'">the newest Version on github is {{newestVersion}}</span>)<br><br>
             <b>Fast Access</b><br>
             <v-list-item-group v-model="item" color="primary">
               <v-list-item to="/account/new">
@@ -112,6 +112,7 @@ import DomainChart from "../components/DomainChart";
 import AliasChart from "../components/AliasChart";
 import AccountChart from "../components/AccountChart";
 import Client from "../service/Client";
+import axios from "axios";
 export default {
   name: 'Home',
   components: {
@@ -124,13 +125,26 @@ export default {
       Client.getVersion().then((res) => {
         this.version = res.data.version
       })
+    },
+    checkNewerVersion: function () {
+      axios.get("https://api.github.com/repos/kekskurse/go-mail-admin/releases").then((res) => {
+        for(let i = 0; i < res.data.length; i++) {
+          console.log(res.data[i])
+          if(res.data[i].prerelease == false && res.data[i].draft == false && this.newestVersion == "unknown") {
+            console.log("FOUND NEWEST VERSION", res.data[i].tag_name)
+            this.newestVersion = res.data[i].tag_name
+          }
+        }
+        console.log(res)
+      })
     }
   },
   mounted: function() {
     this.getVersion()
   },
   data: () => ({
-    version: "unknown"
+    version: "unknown",
+    newestVersion: "unknown",
   })
 }
 </script>
