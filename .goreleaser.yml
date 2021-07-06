@@ -2,12 +2,12 @@
 # Make sure to check the documentation at http://goreleaser.com
 before:
   hooks:
+    # Until go mod works:
+    - make interface-install-deps
     # Vue JS Stuff
     - make client-build
     - make goreleaser-vue
     - make statik
-    # Until go mod works:
-    - make interface-install-deps
     # You may remove this if you don't use go modules.
     #- go mod tidy
     # you may remove this if you don't need go generate
