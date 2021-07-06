@@ -30,7 +30,7 @@ jobs:
       - name: make goreleaser-vue
         run: make goreleaser-vue
       - name: make statik
-        run: make statik
+        run: cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public
       - name: tree
         run: tree
       -
