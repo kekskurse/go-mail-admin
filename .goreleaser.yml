@@ -55,5 +55,5 @@ changelog:
       - '^dev:'
 release:
   draft: false
-  #prerelease: auto
-  prerelease: true
+  prerelease: auto
+  #prerelease: true
