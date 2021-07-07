@@ -16,7 +16,7 @@ func NewFeatureToggleFromEnv() *featureToggles {
 	//Catchall
 	ft.CatchAll = false
 	ft.ShowDomainRecords = false
-	if getConfigVariable("CATCHALL") == "On" {
+	if getConfigVariableWithDefault("CATCHALL", "On") == "On" {
 		ft.CatchAll = true
 	}
 

@@ -67,7 +67,7 @@ func addAlias(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	if getConfigVariable("CATCHALL") != "On" {
+	if getConfigVariableWithDefault("CATCHALL", "On") != "On" {
 		// Remove when the feature toggle is not needed anymore
 		if alias.SourceUsername == nil {
 			w.WriteHeader(http.StatusBadRequest)
