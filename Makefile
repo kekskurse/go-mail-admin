@@ -36,7 +36,7 @@ init-test:
 	sleep 10
 
 test:
-	GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" GOMAILADMIN_V3="on" go test ./mailserver-configurator-interface
+	GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" GOMAILADMIN_V3="off" go test ./mailserver-configurator-interface
 
 
 build: client-build interface-copy-client interface-install-deps interface-build
