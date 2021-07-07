@@ -24,8 +24,12 @@ func NewFeatureToggleFromEnv() *featureToggles {
 		ft.ShowDomainRecords = true
 	}
 
+	if getConfigVariableWithDefault("V3", "off") == "on" {
 
-	ft.AuthMethode = authConfig.Method
+	} else {
+		ft.AuthMethode = authConfig.Method
+	}
+
 
 	return &ft
 }

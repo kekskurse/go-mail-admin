@@ -18,7 +18,7 @@ statik:
 	cd ./mailserver-configurator-interface; ~/go/bin/statik -f -src=./public
 
 run:
-	GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" go run ./mailserver-configurator-interface
+	GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" GOMAILADMIN_V3="on" GOMAILADMIN_AUTH_Username="test" GOMAILADMIN_AUTH_Password="test"  go run ./mailserver-configurator-interface
 
 gorelease-vue:
 	go get github.com/rakyll/statik
@@ -36,7 +36,7 @@ init-test:
 	sleep 10
 
 test:
-	GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" go test ./mailserver-configurator-interface
+	GOMAILADMIN_DB="vmail:vmailpassword@tcp(127.0.0.1:3306)/vmail" GOMAILADMIN_V3="on" go test ./mailserver-configurator-interface
 
 
 build: client-build interface-copy-client interface-install-deps interface-build

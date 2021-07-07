@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"github.com/go-chi/jwtauth/v5"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"net/http"
@@ -22,6 +23,32 @@ var (
 )
 
 var db *sql.DB
+
+func init() {
+	// Config logger
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	log.Info().Msgf("Init")
+
+	//Init Database
+	connectToDb()
+
+	//Config Auth
+	if getConfigVariableWithDefault("V3", "off") == "on" {
+		checkAuthConfig()
+		tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
+		log.Error().Msgf("Use static secret, dont to this!")
+	}
+}
+
+func checkAuthConfig() {
+	if getConfigVariable("AUTH_Username") == "" {
+		log.Fatal().Msgf("No Username is set, set GOMAILADMIN_AUTH_Username")
+	}
+
+	if getConfigVariable("AUTH_Password") == "" {
+		log.Fatal().Msgf("No Password is set, set GOMAILADMIN_AUTH_Password")
+	}
+}
 
 func connectToDb() {
 	log.Debug().Msg("Try to connect to Database")
@@ -79,8 +106,13 @@ func defineRouter() chi.Router {
 	log.Debug().Msg("Setup API-Routen")
 	r := chi.NewRouter()
 
-	redis := newRedisConnection()
-	authConfig = NewAuthFromEnv(redis)
+	if getConfigVariableWithDefault("V3", "off") == "on" {
+		log.Info().Msgf("Run with v3 config")
+	} else {
+		redis := newRedisConnection()
+		authConfig = NewAuthFromEnv(redis)
+	}
+
 
 	cors := cors.New(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
@@ -99,7 +131,14 @@ func defineRouter() chi.Router {
 	r.Use(middleware.Recoverer)
 
 	apiRouten := chi.NewRouter()
-	apiRouten.Use(authConfig.Handle)
+	if getConfigVariableWithDefault("V3", "off") == "on" {
+		apiRouten.Use(jwtauth.Verifier(tokenAuth))
+		apiRouten.Use(jwtauth.Authenticator)
+	} else {
+		apiRouten.Use(authConfig.Handle)
+		apiRouten.Post("/v1/logout", logout)
+	}
+
 
 	apiRouten.Get("/v1/domain", getDomains)
 	apiRouten.Get("/v1/domain/{domain}", getDomainDetails)
@@ -119,14 +158,19 @@ func defineRouter() chi.Router {
 	apiRouten.Put("/v1/tlspolicy", updateTLSPolicy)
 	apiRouten.Delete("/v1/tlspolicy", deleteTLSPolicy)
 	apiRouten.Get("/v1/features", getFeatureToggles)
-	apiRouten.Post("/v1/logout", logout)
 	apiRouten.Get("/v1/version", getVersion)
 	r.Get("/ping", http_ping)
 	r.Get("/status", http_status)
 
 	publicRouten := chi.NewRouter()
 
-	publicRouten.Post("/v1/login/username", loginUsername)
+	if getConfigVariableWithDefault("V3", "off") == "on" {
+		publicRouten.Post("/v1/login", login)
+		publicRouten.Post("/v1/login/username", login) //Old route for old frontend, need to be removed
+	} else {
+		publicRouten.Post("/v1/login/username", loginUsername)
+	}
+
 	publicRouten.Post("/v1/features", getFeatureToggles)
 	publicRouten.Get("/v1/features", getFeatureToggles)
 
@@ -147,10 +191,10 @@ func defineRouter() chi.Router {
 }
 
 func main() {
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
 	log.Debug().Msg("Start Go Mail Admin")
 	log.Info().Msgf("Running version %v", version)
-	connectToDb()
+
 	router := defineRouter()
 	address := getConfigVariable("ADDRESS")
 	port := getConfigVariable("PORT")

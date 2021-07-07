@@ -14,7 +14,8 @@ export default() => {
     header["Accept"] = 'application/json';
     header["Content-Type"] = 'application/json';
     if(localStorage.getItem("token") != null) {
-        header["X-APITOKEN"] = localStorage.getItem("token");
+        header["X-APITOKEN"] = localStorage.getItem("token"); //used with old api
+        header["Authorization"] = "BEARER " + localStorage.getItem("token") //used with new api
     }
 
     let a;
