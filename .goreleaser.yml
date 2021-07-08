@@ -53,6 +53,7 @@ changelog:
       - '^docs:'
       - '^test:'
       - '^dev:'
+      - '^Stuff'
 release:
   draft: false
   prerelease: auto
