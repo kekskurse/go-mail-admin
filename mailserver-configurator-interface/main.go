@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"embed"
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -23,6 +24,9 @@ var (
 )
 
 var db *sql.DB
+
+//go:embed templates/*.tmpl
+var embeddedTemplates embed.FS
 
 func init() {
 	// Config logger
@@ -161,6 +165,7 @@ func defineRouter() chi.Router {
 	apiRouten.Get("/v1/version", getVersion)
 	r.Get("/ping", http_ping)
 	r.Get("/status", http_status)
+	//r.Get("/test", test)
 
 	publicRouten := chi.NewRouter()
 
@@ -206,3 +211,17 @@ func main() {
 
 	log.Debug().Msg("Done, Shotdown")
 }
+
+
+
+/*func test(w http.ResponseWriter, req *http.Request) {
+	r := render.New(render.Options{
+		Directory: "templates",
+		FileSystem: &render.EmbedFileSystem{
+			FS: embeddedTemplates,
+		},
+		Extensions: []string{".html", ".tmpl"},
+	})
+
+	r.HTML(w, http.StatusOK, "example", "world")
+}*/
