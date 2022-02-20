@@ -1,47 +1,15 @@
 package main
 
 import (
-	"crypto/sha512"
-	"encoding/base64"
 	"encoding/json"
+	"gomailadmin/mailserver-configurator-interface/password"
 	"io/ioutil"
-	"github.com/rs/zerolog/log"
-	"math/rand"
 	"net/http"
-	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"gopkg.in/unrolled/render.v1"
 )
-
-//Password Stuff
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-const (
-	letterIdxBits = 6                    // 6 bits to represent a letter index
-	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
-	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
-)
-
-var src = rand.NewSource(time.Now().UnixNano())
-
-// RandStringBytesMaskImprSrc Generate random string in golang
-func RandStringBytesMaskImprSrc(n int) string {
-	// http://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-golang
-	b := make([]byte, n)
-	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
-	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
-		if remain == 0 {
-			cache, remain = src.Int63(), letterIdxMax
-		}
-		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
-			b[i] = letterBytes[idx]
-			i--
-		}
-		cache >>= letterIdxBits
-		remain--
-	}
-
-	return string(b)
-}
 
 // Account from MYSQL
 type Account struct {
@@ -52,7 +20,7 @@ type Account struct {
 	Quota    int    `json:"quota"`
 	Enabled  bool   `json:"enabled"`
 	SendOnly bool   `json:"sendonly"`
-	Print string `json:"print"`
+	Print    string `json:"print"`
 }
 
 // AccountWithPassword from MYSQL
@@ -64,7 +32,7 @@ type AccountWithPassword struct {
 	Quota    int    `json:"quota"`
 	Enabled  bool   `json:"enabled"`
 	SendOnly bool   `json:"sendonly"`
-	Print string `json:"print"`
+	Print    string `json:"print"`
 }
 
 func getAccounts(w http.ResponseWriter, r *http.Request) {
@@ -101,13 +69,12 @@ func addAccount(w http.ResponseWriter, r *http.Request) {
 	var account AccountWithPassword
 	json.Unmarshal(body, &account)
 
-	//Hash password
-	salt := RandStringBytesMaskImprSrc(5)
-	hasher := sha512.New()
-	hasher.Write([]byte(account.Password))
-	hasher.Write([]byte(salt))
-
-	pwHash := "{SSHA512}" + base64.StdEncoding.EncodeToString([]byte(string(hasher.Sum(nil))+salt))
+	pwHash, err := password.GetPasswordHashBuilder("ssha512").Hash(account.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
 
 	stmt, err := db.Prepare("INSERT INTO accounts (`username`, `domain`, `password`, `quota`, `enabled`, `sendonly`) VALUES(?, ?, ? ,? , ? , ?)")
 	if err != nil {
@@ -190,12 +157,12 @@ func updateAccountPassword(w http.ResponseWriter, r *http.Request) {
 	var account AccountWithPassword
 	json.Unmarshal(body, &account)
 
-	salt := RandStringBytesMaskImprSrc(5)
-	hasher := sha512.New()
-	hasher.Write([]byte(account.Password))
-	hasher.Write([]byte(salt))
-
-	pwHash := "{SSHA512}" + base64.StdEncoding.EncodeToString([]byte(string(hasher.Sum(nil))+salt))
+	pwHash, err := password.GetPasswordHashBuilder("ssha512").Hash(account.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
 
 	stmt, err := db.Prepare("UPDATE accounts SET password = ? WHERE id = ?")
 	if err != nil {

@@ -12,5 +12,6 @@ require (
 	github.com/rakyll/statik v0.1.7
 	github.com/rs/zerolog v1.23.0
 	github.com/unrolled/render v1.4.0
+	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
 	gopkg.in/unrolled/render.v1 v1.0.0
 )
