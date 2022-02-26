@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-chi/chi/v5"
-	"gopkg.in/unrolled/render.v1"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"regexp"
 	"strings"
+
+	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog/log"
+	"github.com/unrolled/render"
 )
 
 func getDomainDetails(w http.ResponseWriter, r *http.Request)  {

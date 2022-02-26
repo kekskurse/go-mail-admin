@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"github.com/rs/zerolog/log"
 	"net/http"
 
-	"gopkg.in/unrolled/render.v1"
+	"github.com/rs/zerolog/log"
+
+	"github.com/unrolled/render"
 )
 
 // TLSPolicy from MYSQL
