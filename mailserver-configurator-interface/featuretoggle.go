@@ -1,43 +1,14 @@
 package main
 
 import (
-	"github.com/unrolled/render"
 	"net/http"
+
+	"github.com/unrolled/render"
 )
 
-type featureToggles struct {
-	CatchAll bool `json:"catchall"`
-	AuthMethode string `json:"auth"`
-	ShowDomainRecords bool `json:"showDomainDetails"`
-}
-
-func NewFeatureToggleFromEnv() *featureToggles {
-	ft := featureToggles{}
-	//Catchall
-	ft.CatchAll = false
-	ft.ShowDomainRecords = false
-	if getConfigVariableWithDefault("CATCHALL", "On") == "On" {
-		ft.CatchAll = true
-	}
-
-	if getConfigVariableWithDefault("SHOW_DNS_RECORDS", "On") == "On" {
-		ft.ShowDomainRecords = true
-	}
-
-	if getConfigVariableWithDefault("V3", "off") == "on" {
-
-	} else {
-		ft.AuthMethode = authConfig.Method
-	}
-
-
-	return &ft
-}
-
-func getFeatureToggles(w http.ResponseWriter, r *http.Request) {
-	ft := NewFeatureToggleFromEnv()
+func (m *MailServerConfiguratorInterface) getFeatureToggles(w http.ResponseWriter, r *http.Request) {
 	ren := render.New()
-	ren.JSON(w, http.StatusOK, ft)
+	ren.JSON(w, http.StatusOK, m.Config.FeatureToggles)
 }
 
 func getVersion(w http.ResponseWriter, r *http.Request) {

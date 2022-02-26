@@ -13,13 +13,13 @@ import (
 	"github.com/unrolled/render"
 )
 
-func getDomainDetails(w http.ResponseWriter, r *http.Request)  {
-	details := newDomainDetails(chi.URLParam(r, "domain"))
+func (m *MailServerConfiguratorInterface) getDomainDetails(w http.ResponseWriter, r *http.Request) {
+	details := newDomainDetails(chi.URLParam(r, "domain"), m.Config)
 	ren := render.New()
 	ren.JSON(w, http.StatusOK, details)
 }
 
-func newDomainDetails (domainName string) DomainDetails {
+func newDomainDetails(domainName string, config Config) DomainDetails {
 	d := DomainDetails{}
 	//defaults
 	d.MXRecordCheck = false
@@ -36,7 +36,7 @@ func newDomainDetails (domainName string) DomainDetails {
 	d.checkMXRecord()
 	d.checkSPFRecord()
 	d.checkDMARCRecord()
-	d.checkDKIMCRecord()
+	d.checkDKIMCRecord(config.DkimSelector, config.DkimValue)
 
 	return d
 }
@@ -44,12 +44,12 @@ func newDomainDetails (domainName string) DomainDetails {
 type DomainDetails struct {
 	DomainName string `json:"domain_name"`
 
-	hostname string
-	MXRecordCheck bool
-	SPFRecordCheck bool
+	hostname         string
+	MXRecordCheck    bool
+	SPFRecordCheck   bool
 	DMARCRecordCheck bool
-	RecordChecked bool
-	DKIMCheck bool
+	RecordChecked    bool
+	DKIMCheck        bool
 }
 
 func (d *DomainDetails) readPostfixConfig() {
@@ -71,8 +71,8 @@ func (d *DomainDetails) checkMXRecord() {
 
 	mxrecords, _ := net.LookupMX(d.DomainName)
 	for _, mx := range mxrecords {
-		if(mx.Host == d.hostname+".") {
-			log.Debug().Msg(fmt.Sprintf("Found MX valide Record for Domain %s",d.DomainName))
+		if mx.Host == d.hostname+"." {
+			log.Debug().Msg(fmt.Sprintf("Found MX valide Record for Domain %s", d.DomainName))
 			d.MXRecordCheck = true
 		}
 	}
@@ -95,7 +95,7 @@ func (d *DomainDetails) checkSPFRecord() {
 
 func (d *DomainDetails) checkDMARCRecord() {
 	log.Debug().Msg(fmt.Sprintf("Check DMARC Record for Domain %s", d.DomainName))
-	rs, err := net.LookupTXT("_dmarc."+d.DomainName)
+	rs, err := net.LookupTXT("_dmarc." + d.DomainName)
 	if err != nil {
 		log.Error().Err(err).Msg("DMARC Record check failed")
 		return
@@ -109,17 +109,17 @@ func (d *DomainDetails) checkDMARCRecord() {
 	}
 }
 
-func (d *DomainDetails) checkDKIMCRecord() {
+func (d *DomainDetails) checkDKIMCRecord(dkimSelector, dkimValue string) {
 	log.Debug().Msg(fmt.Sprintf("Check DKMI Record for Domain %s", d.DomainName))
 
-	rs, err := net.LookupTXT(getConfigVariable("DKIM_SELECTOR")+"._domainkey."+d.DomainName)
+	rs, err := net.LookupTXT(dkimSelector + "._domainkey." + d.DomainName)
 	if err != nil {
 		log.Error().Err(err).Msg(fmt.Sprintf("DMARC Record check failed for Domain %s", d.DomainName))
 		return
 	}
 
 	for _, record := range rs {
-		if record == getConfigVariable("DKIM_VALUE") {
+		if record == dkimValue {
 			d.DKIMCheck = true
 		}
 	}

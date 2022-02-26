@@ -3,11 +3,13 @@ package main
 import (
 	"database/sql"
 	"embed"
+	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"net/http"
-	"os"
 
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rakyll/statik/fs"
@@ -15,12 +17,14 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 
-	_ "github.com/go-sql-driver/mysql"
+	"gomailadmin/mailserver-configurator-interface/password"
 	_ "gomailadmin/mailserver-configurator-interface/statik"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
-	version                                = "development"
+	version = "development"
 )
 
 var db *sql.DB
@@ -32,36 +36,25 @@ func init() {
 	// Config logger
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	log.Info().Msgf("Init")
-
-	//Init Database
-	connectToDb()
-
-	//Config Auth
-	if getConfigVariableWithDefault("V3", "off") == "on" {
-		checkAuthConfig()
-		tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
-		log.Error().Msgf("Use static secret, dont to this!")
-	}
 }
 
-func checkAuthConfig() {
-	if getConfigVariable("AUTH_Username") == "" {
-		log.Fatal().Msgf("No Username is set, set GOMAILADMIN_AUTH_Username")
-	}
-
-	if getConfigVariable("AUTH_Password") == "" {
-		log.Fatal().Msgf("No Password is set, set GOMAILADMIN_AUTH_Password")
-	}
+type MailServerConfiguratorInterface struct {
+	DBConn      *sql.DB
+	Config      Config
+	HashBuilder password.PasswordHashBuilder
 }
 
-func connectToDb() {
+func NewMailServerConfiguratorInterface(config Config) *MailServerConfiguratorInterface {
+
+	hb := password.GetPasswordHashBuilder(config.PasswordScheme)
+
+	return &MailServerConfiguratorInterface{Config: config, HashBuilder: hb}
+}
+
+func (m *MailServerConfiguratorInterface) connectToDb() {
 	log.Debug().Msg("Try to connect to Database")
-	dbString := getConfigVariable("DB")
-	if dbString == "" {
-		log.Fatal().Msg("No DB Connection string set, set enviroment varieable GOMAILADMIN_DB")
-	}
 	var err error
-	db, err = sql.Open("mysql", dbString)
+	db, err = sql.Open("mysql", m.Config.DatabaseURI)
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Can`t connect to db")
@@ -83,7 +76,7 @@ func getConfigVariable(name string) string {
 }
 
 func getConfigVariableWithDefault(name string, defaultValue string) string {
-	value := os.Getenv("GOMAILADMIN_" + name)
+	value := getConfigVariable(name)
 	if value == "" {
 		return defaultValue
 	}
@@ -106,17 +99,19 @@ func http_status(w http.ResponseWriter, r *http.Request) {
 
 var authConfig auth
 
-func defineRouter() chi.Router {
+func defineRouter(config Config) chi.Router {
 	log.Debug().Msg("Setup API-Routen")
 	r := chi.NewRouter()
 
-	if getConfigVariableWithDefault("V3", "off") == "on" {
+	m := NewMailServerConfiguratorInterface(config)
+	m.connectToDb()
+
+	if config.V3Config {
 		log.Info().Msgf("Run with v3 config")
 	} else {
-		redis := newRedisConnection()
-		authConfig = NewAuthFromEnv(redis)
+		redis := newRedisConnection(config)
+		authConfig = NewAuthFromEnv(redis, config)
 	}
-
 
 	cors := cors.New(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
@@ -135,7 +130,7 @@ func defineRouter() chi.Router {
 	r.Use(middleware.Recoverer)
 
 	apiRouten := chi.NewRouter()
-	if getConfigVariableWithDefault("V3", "off") == "on" {
+	if config.V3Config {
 		apiRouten.Use(jwtauth.Verifier(tokenAuth))
 		apiRouten.Use(jwtauth.Authenticator)
 	} else {
@@ -143,25 +138,24 @@ func defineRouter() chi.Router {
 		apiRouten.Post("/v1/logout", logout)
 	}
 
-
-	apiRouten.Get("/v1/domain", getDomains)
-	apiRouten.Get("/v1/domain/{domain}", getDomainDetails)
+	apiRouten.Get("/v1/domain", m.getDomains)
+	apiRouten.Get("/v1/domain/{domain}", m.getDomainDetails)
 	apiRouten.Post("/v1/domain", addDomain)
 	apiRouten.Delete("/v1/domain", deleteDomain)
 	apiRouten.Get("/v1/alias", getAliases)
-	apiRouten.Post("/v1/alias", addAlias)
+	apiRouten.Post("/v1/alias", m.addAlias)
 	apiRouten.Delete("/v1/alias", deleteAlias)
 	apiRouten.Put("/v1/alias", updateAlias)
 	apiRouten.Get("/v1/account", getAccounts)
-	apiRouten.Post("/v1/account", addAccount)
+	apiRouten.Post("/v1/account", m.addAccount)
 	apiRouten.Delete("/v1/account", deleteAccount)
 	apiRouten.Put("/v1/account", updateAccount)
-	apiRouten.Put("/v1/account/password", updateAccountPassword)
+	apiRouten.Put("/v1/account/password", m.updateAccountPassword)
 	apiRouten.Get("/v1/tlspolicy", getTLSPolicy)
 	apiRouten.Post("/v1/tlspolicy", addTLSPolicy)
 	apiRouten.Put("/v1/tlspolicy", updateTLSPolicy)
 	apiRouten.Delete("/v1/tlspolicy", deleteTLSPolicy)
-	apiRouten.Get("/v1/features", getFeatureToggles)
+	apiRouten.Get("/v1/features", m.getFeatureToggles)
 	apiRouten.Get("/v1/version", getVersion)
 	r.Get("/ping", http_ping)
 	r.Get("/status", http_status)
@@ -169,17 +163,15 @@ func defineRouter() chi.Router {
 
 	publicRouten := chi.NewRouter()
 
-	if getConfigVariableWithDefault("V3", "off") == "on" {
-		publicRouten.Post("/v1/login", login)
-		publicRouten.Post("/v1/login/username", login) //Old route for old frontend, need to be removed
+	if config.V3Config {
+		publicRouten.Post("/v1/login", m.login)
+		publicRouten.Post("/v1/login/username", m.login) //Old route for old frontend, need to be removed
 	} else {
 		publicRouten.Post("/v1/login/username", loginUsername)
 	}
 
-	publicRouten.Post("/v1/features", getFeatureToggles)
-	publicRouten.Get("/v1/features", getFeatureToggles)
-
-
+	publicRouten.Post("/v1/features", m.getFeatureToggles)
+	publicRouten.Get("/v1/features", m.getFeatureToggles)
 
 	r.Mount("/api", apiRouten)
 	r.Mount("/public", publicRouten)
@@ -200,19 +192,16 @@ func main() {
 	log.Debug().Msg("Start Go Mail Admin")
 	log.Info().Msgf("Running version %v", version)
 
-	router := defineRouter()
-	address := getConfigVariable("ADDRESS")
-	port := getConfigVariable("PORT")
-	if port == "" {
-		port = "3001"
+	config := NewConfig()
+
+	router := defineRouter(config)
+	err := http.ListenAndServe(fmt.Sprintf("%s:%d", config.Address, config.Port), router)
+	if err != nil {
+		log.Error().Err(err).Msg("HTTP Server stop")
 	}
-	err := http.ListenAndServe(address+":"+port, router)
-	log.Error().Err(err).Msg("HTTP Server stop")
 
 	log.Debug().Msg("Done, Shotdown")
 }
-
-
 
 /*func test(w http.ResponseWriter, req *http.Request) {
 	r := render.New(render.Options{

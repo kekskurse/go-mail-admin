@@ -2,16 +2,17 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/rs/zerolog/log"
 	"github.com/unrolled/render"
-	"io/ioutil"
-	"net/http"
 )
 
 var tokenAuth *jwtauth.JWTAuth
 
-func login(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) login(w http.ResponseWriter, r *http.Request) {
 	log.Debug().Msgf("Login new JWT Function")
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -26,7 +27,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	loginResult := struct {
-		Login bool `json:"login"`
+		Login bool   `json:"login"`
 		Token string `json:"token"`
 	}{
 		Login: false,
@@ -35,8 +36,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	json.Unmarshal(body, &loginData)
 
-	if loginData.Username == getConfigVariable("AUTH_Username") {
-		if loginData.Password == getConfigVariable("AUTH_Password") {
+	if loginData.Username == m.Config.AuthUsername {
+		if loginData.Password == m.Config.AuthPassword {
 			_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"admin": true})
 			loginResult.Token = tokenString
 			loginResult.Login = true

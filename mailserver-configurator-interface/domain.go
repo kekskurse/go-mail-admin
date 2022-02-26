@@ -2,21 +2,22 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/rs/zerolog/log"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/unrolled/render"
 )
 
 // Domain from MYSQL
 type Domain struct {
-	ID     int    `json:"id"`
-	Domain string `json:"domain"`
+	ID      int           `json:"id"`
+	Domain  string        `json:"domain"`
 	Details DomainDetails `json:"detail"`
 }
 
-func getDomains(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) getDomains(w http.ResponseWriter, r *http.Request) {
 	result, err := db.Query("SELECT id, domain FROM domains ORDER BY id")
 
 	if err != nil {
@@ -32,8 +33,8 @@ func getDomains(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal().Err(err).Msg("Error scanning Query Result for Domains")
 		}
-		if getConfigVariable("CHECK_DNS_RECORDS") == "On" {
-			domain.Details = newDomainDetails(domain.Domain)
+		if m.Config.CheckDnsRecords {
+			domain.Details = newDomainDetails(domain.Domain, m.Config)
 		}
 		domains = append(domains, domain)
 	}

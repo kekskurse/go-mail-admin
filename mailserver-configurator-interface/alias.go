@@ -12,14 +12,14 @@ import (
 
 // Alias from MYSQL
 type Alias struct {
-	ID                  int    `json:"id"`
+	ID                  int     `json:"id"`
 	SourceUsername      *string `json:"source_username"`
 	SourceDomain        *string `json:"source_domain"`
 	DestinationUsername *string `json:"destination_username"`
 	DestinationDomain   *string `json:"destination_domain"`
-	Enabled             bool   `json:"enabled"`
-	PrintSource         string `json:"print_source"`
-	PrintDestination    string `json:"print_destination"`
+	Enabled             bool    `json:"enabled"`
+	PrintSource         string  `json:"print_source"`
+	PrintDestination    string  `json:"print_destination"`
 }
 
 func getAliases(w http.ResponseWriter, r *http.Request) {
@@ -42,9 +42,8 @@ func getAliases(w http.ResponseWriter, r *http.Request) {
 		if alias.SourceUsername != nil {
 			alias.PrintSource = *alias.SourceUsername + "@" + *alias.SourceDomain
 		} else {
-			alias.PrintSource = "Catchall for "+*alias.SourceDomain
+			alias.PrintSource = "Catchall for " + *alias.SourceDomain
 		}
-
 
 		alias.PrintDestination = *alias.DestinationUsername + "@" + *alias.DestinationDomain
 		aliases = append(aliases, alias)
@@ -52,7 +51,7 @@ func getAliases(w http.ResponseWriter, r *http.Request) {
 	ren := render.New()
 	ren.JSON(w, http.StatusOK, aliases)
 }
-func addAlias(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) addAlias(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -67,8 +66,7 @@ func addAlias(w http.ResponseWriter, r *http.Request) {
 		log.Info().Err(err).Msgf("Cant parse alias request")
 	}
 
-
-	if getConfigVariableWithDefault("CATCHALL", "On") != "On" {
+	if !m.Config.FeatureToggles.CatchAll {
 		// Remove when the feature toggle is not needed anymore
 		if alias.SourceUsername == nil {
 			w.WriteHeader(http.StatusBadRequest)

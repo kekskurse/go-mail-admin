@@ -8,7 +8,6 @@ import (
 	"testing"
 )
 
-
 func TestGetEmptyDomainList(t *testing.T) {
 	req, err := http.NewRequest("GET", "/v1/domain", nil)
 
@@ -17,11 +16,11 @@ func TestGetEmptyDomainList(t *testing.T) {
 	}
 
 	resetDBForTest()
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(getDomains)
+	handler := http.HandlerFunc(m.getDomains)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
@@ -38,7 +37,7 @@ func TestGetEmptyDomainList(t *testing.T) {
 	}
 }
 
-func TestAddInvalidDomain(t *testing.T)  {
+func TestAddInvalidDomain(t *testing.T) {
 	t.Skip("Domain validation need to be added")
 	req, err := http.NewRequest("POST", "/v1/domain", bytes.NewBufferString("{\"domain\":\"invalide\"}"))
 
@@ -46,8 +45,8 @@ func TestAddInvalidDomain(t *testing.T)  {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(addDomain)
@@ -58,15 +57,15 @@ func TestAddInvalidDomain(t *testing.T)  {
 	}
 }
 
-func TestAddDomain(t *testing.T)  {
+func TestAddDomain(t *testing.T) {
 	req, err := http.NewRequest("POST", "/v1/domain", bytes.NewBufferString("{\"domain\":\"example.com\"}"))
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(addDomain)
@@ -84,11 +83,11 @@ func TestGetOneDomainList(t *testing.T) {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(getDomains)
+	handler := http.HandlerFunc(m.getDomains)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
@@ -115,14 +114,14 @@ func TestGetOneDomainList(t *testing.T) {
 
 func TestDeleteNotExistingDomain(t *testing.T) {
 	t.Skip("Check if domian existed must be added to controller first")
-	req, err := http.NewRequest("DELETE", "/v1/domain",  bytes.NewBufferString("{\"domain\":\"delete.com\"}"))
+	req, err := http.NewRequest("DELETE", "/v1/domain", bytes.NewBufferString("{\"domain\":\"delete.com\"}"))
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(deleteDomain)
@@ -134,14 +133,14 @@ func TestDeleteNotExistingDomain(t *testing.T) {
 }
 
 func TestDeleteDomain(t *testing.T) {
-	req, err := http.NewRequest("DELETE", "/v1/domain",  bytes.NewBufferString("{\"domain\":\"example.com\"}"))
+	req, err := http.NewRequest("DELETE", "/v1/domain", bytes.NewBufferString("{\"domain\":\"example.com\"}"))
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(deleteDomain)
@@ -159,11 +158,11 @@ func TestGetEmptyDomainList2(t *testing.T) {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(getDomains)
+	handler := http.HandlerFunc(m.getDomains)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {

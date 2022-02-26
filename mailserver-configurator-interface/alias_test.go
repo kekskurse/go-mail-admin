@@ -9,20 +9,19 @@ import (
 	"testing"
 )
 
-func TestAddAliasWithoutValidDomain(t *testing.T)  {
+func TestAddAliasWithoutValidDomain(t *testing.T) {
 	req, err := http.NewRequest("POST", "/v1/alias", bytes.NewBufferString("{\"source_username\":\"test\", \"source_domain\":\"foobar\", \"destination_username\":\"foo\", \"destination_domain\":\"google.com\", \"enabled\":true}"))
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 	resetDBForTest()
 
-
-
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(addAlias)
+	handler := http.HandlerFunc(m.addAlias)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusInternalServerError {
@@ -32,20 +31,21 @@ func TestAddAliasWithoutValidDomain(t *testing.T)  {
 	}
 }
 
-func TestAddAlias(t *testing.T)  {
+func TestAddAlias(t *testing.T) {
 	req, err := http.NewRequest("POST", "/v1/alias", bytes.NewBufferString("{\"source_username\":\"test\", \"source_domain\":\"alias.com\", \"destination_username\":\"foo\", \"destination_domain\":\"google.com\", \"enabled\":true}"))
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	stmt, _ := db.Prepare("INSERT INTO domains(domain) VALUES(?)")
 	_, _ = stmt.Exec("alias.com")
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(addAlias)
+	handler := http.HandlerFunc(m.addAlias)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusCreated {
@@ -55,15 +55,15 @@ func TestAddAlias(t *testing.T)  {
 	}
 }
 
-func TestGetAliases(t *testing.T)  {
+func TestGetAliases(t *testing.T) {
 	req, err := http.NewRequest("GET", "/v1/aliase", nil)
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(getAliases)
@@ -86,15 +86,15 @@ func TestGetAliases(t *testing.T)  {
 		t.Errorf("Wrong SourceUsername")
 	}
 
-	if *alias[0].SourceDomain !=  "alias.com" {
+	if *alias[0].SourceDomain != "alias.com" {
 		t.Errorf("Wrong SourceDomain")
 	}
 
-	if *alias[0].DestinationUsername !=  "foo" {
+	if *alias[0].DestinationUsername != "foo" {
 		t.Errorf("Wrong SourceDomain")
 	}
 
-	if *alias[0].DestinationDomain !=  "google.com" {
+	if *alias[0].DestinationDomain != "google.com" {
 		t.Errorf("Wrong SourceDomain")
 	}
 
@@ -107,14 +107,15 @@ func TestGetAliases(t *testing.T)  {
 	}
 }
 
-func TestUpdateAliasWrongDomain(t *testing.T)  {
+func TestUpdateAliasWrongDomain(t *testing.T) {
 	req, err := http.NewRequest("POST", "/v1/alias", bytes.NewBufferString("{\"id\": 2, \"source_username\":\"test\", \"source_domain\":\"ne.com\", \"destination_username\":\"foo\", \"destination_domain\":\"google.com\", \"enabled\":true}"))
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(updateAlias)
@@ -127,14 +128,15 @@ func TestUpdateAliasWrongDomain(t *testing.T)  {
 	}
 }
 
-func TestUpdateAlias(t *testing.T)  {
+func TestUpdateAlias(t *testing.T) {
 	req, err := http.NewRequest("POST", "/v1/alias", bytes.NewBufferString("{\"id\": 2, \"source_username\":\"updated\", \"source_domain\":\"alias.com\", \"destination_username\":\"foo\", \"destination_domain\":\"google.com\", \"enabled\":true}"))
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	stmt, _ := db.Prepare("INSERT INTO domains(domain) VALUES(?)")
 	_, _ = stmt.Exec("alias.com")
@@ -150,15 +152,15 @@ func TestUpdateAlias(t *testing.T)  {
 	}
 }
 
-func TestGetAliasesAfterUpdate(t *testing.T)  {
+func TestGetAliasesAfterUpdate(t *testing.T) {
 	req, err := http.NewRequest("GET", "/v1/aliase", nil)
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(getAliases)
@@ -181,15 +183,15 @@ func TestGetAliasesAfterUpdate(t *testing.T)  {
 		t.Errorf("Wrong SourceUsername got %v excepted %v", *alias[0].SourceUsername, "updated")
 	}
 
-	if *alias[0].SourceDomain !=  "alias.com" {
+	if *alias[0].SourceDomain != "alias.com" {
 		t.Errorf("Wrong SourceDomain")
 	}
 
-	if *alias[0].DestinationUsername !=  "foo" {
+	if *alias[0].DestinationUsername != "foo" {
 		t.Errorf("Wrong SourceDomain")
 	}
 
-	if *alias[0].DestinationDomain !=  "google.com" {
+	if *alias[0].DestinationDomain != "google.com" {
 		t.Errorf("Wrong SourceDomain")
 	}
 
@@ -198,14 +200,15 @@ func TestGetAliasesAfterUpdate(t *testing.T)  {
 	}
 }
 
-func TestRemoveAlias(t *testing.T)  {
+func TestRemoveAlias(t *testing.T) {
 	req, err := http.NewRequest("POST", "/v1/alias", bytes.NewBufferString("{\"id\": 2}"))
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(deleteAlias)
@@ -218,15 +221,15 @@ func TestRemoveAlias(t *testing.T)  {
 	}
 }
 
-func TestGetAliasesEmpty(t *testing.T)  {
+func TestGetAliasesEmpty(t *testing.T) {
 	req, err := http.NewRequest("GET", "/v1/aliase", nil)
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	connectToDb()
-
+	m := NewMailServerConfiguratorInterface(NewConfig())
+	m.connectToDb()
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(getAliases)

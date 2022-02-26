@@ -2,15 +2,18 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/gomodule/redigo/redis"
 	"github.com/rs/zerolog/log"
 )
+
 type redisConnection struct {
-	pool *redis.Pool
+	pool   *redis.Pool
+	config Config
 }
 
-func newRedisConnection() redisConnection {
-	r := redisConnection{}
+func newRedisConnection(config Config) redisConnection {
+	r := redisConnection{config: config}
 	r.initPool()
 	r.ping()
 	return r
@@ -22,7 +25,7 @@ func (r *redisConnection) initPool() {
 		MaxIdle:   80,
 		MaxActive: 12000,
 		Dial: func() (redis.Conn, error) {
-			conn, err := redis.Dial(getConfigVariableWithDefault("REDIS_NETWORK", "tcp"), getConfigVariableWithDefault("REDIS_ADDRESS", "localhost:6379"))
+			conn, err := redis.Dial(r.config.RedisNetwork, r.config.RedisAddress)
 			if err != nil {
 				log.Fatal().Err(err).Msg("Fail init redis pool")
 			}
@@ -63,7 +66,7 @@ func (r *redisConnection) get(key string) (string, error) {
 	return s, nil
 }
 
-func (r *redisConnection) delete(key string) (error) {
+func (r *redisConnection) delete(key string) error {
 	// get conn and put back when exit from method
 	conn := r.pool.Get()
 	defer conn.Close()
@@ -71,7 +74,7 @@ func (r *redisConnection) delete(key string) (error) {
 	_, err := redis.String(conn.Do("DEL", key))
 	if err != nil {
 		log.Warn().Err(err).Msg(fmt.Sprintf("Failed to delete redis key >%s<", key))
-		return  err
+		return err
 	}
 
 	return nil

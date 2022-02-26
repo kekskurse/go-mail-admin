@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"gomailadmin/mailserver-configurator-interface/password"
 	"io/ioutil"
 	"net/http"
 
@@ -58,7 +57,7 @@ func getAccounts(w http.ResponseWriter, r *http.Request) {
 	ren.JSON(w, http.StatusOK, accounts)
 }
 
-func addAccount(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) addAccount(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -69,7 +68,7 @@ func addAccount(w http.ResponseWriter, r *http.Request) {
 	var account AccountWithPassword
 	json.Unmarshal(body, &account)
 
-	pwHash, err := password.GetPasswordHashBuilder("ssha512").Hash(account.Password)
+	pwHash, err := m.HashBuilder.Hash(account.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -146,7 +145,7 @@ func updateAccount(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func updateAccountPassword(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) updateAccountPassword(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -157,7 +156,7 @@ func updateAccountPassword(w http.ResponseWriter, r *http.Request) {
 	var account AccountWithPassword
 	json.Unmarshal(body, &account)
 
-	pwHash, err := password.GetPasswordHashBuilder("ssha512").Hash(account.Password)
+	pwHash, err := m.HashBuilder.Hash(account.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

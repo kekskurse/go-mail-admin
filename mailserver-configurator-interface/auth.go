@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/unrolled/render"
 	"io/ioutil"
-	"github.com/rs/zerolog/log"
 	"math/rand"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
+	"github.com/unrolled/render"
 )
 
 type auth struct {
@@ -22,41 +23,32 @@ type auth struct {
 	Password string
 
 	//For Admin Mail
-	AdminMailMails []string
+	AdminMailMails   []string
 	AdminMailAPIKeys []string
-
 
 	//Redis
 	Redis redisConnection
-
 }
 
 // NewAuthFromEnv load the env based of go-mail-admin to make it a bit easyer to use
-func NewAuthFromEnv(r redisConnection) auth {
+func NewAuthFromEnv(r redisConnection, config Config) auth {
 	a := auth{}
 	a.Redis = r
 
-	authMethod := getConfigVariableWithDefault("AUTH_METHOD", "")
-
-	apiKey := getConfigVariable("APIKEY")
-	apiSecret := getConfigVariable("APISECRET")
-
 	//Switch it to the httpBasicAuth Block if the old Auth enviroment is removed
-	httpBasicAuthUsername := getConfigVariable("AUTH_HTTPBasic_Username")
-	httpBasicAuthPassword := getConfigVariable("AUTH_HTTPBasic_Password")
+	httpBasicAuthUsername := config.HttpBasicAuthUsername
+	httpBasicAuthPassword := config.HttpBasicAuthPassword
 
-	if apiKey != "" && apiSecret != "" {
-		if authMethod == "AdminMail" {
+	if config.ApiKey != "" && config.ApiSecret != "" {
+		if config.AuthMethod == "AdminMail" {
 			panic("Auth method is set to AdminMail but APIKEY and APISECRET is set!")
 		}
-		authMethod = "HTTPBasicAuth"
-		httpBasicAuthUsername = apiKey
-		httpBasicAuthPassword = apiSecret
-		log.Warn().Msg("The old Enviroment varieable GOMAILADMIN_APIKEY or GOMAILADMIN_APISECRET are set. The Auth method is forced to HTTPBasicAuth, please read the new auth docs to change your configuration")
-		// At a panic in the feature
+		config.AuthMethod = "HTTPBasicAuth"
+		httpBasicAuthUsername = config.ApiKey
+		httpBasicAuthPassword = config.ApiSecret
 	}
 
-	a.Method = authMethod
+	a.Method = config.AuthMethod
 
 	if a.Method == "HTTPBasicAuth" {
 		log.Debug().Msg("Auth: Enabled HTTPBasicAuth")
@@ -71,8 +63,8 @@ func NewAuthFromEnv(r redisConnection) auth {
 
 	if a.Method == "Username" {
 		log.Debug().Msg("Auth: Enabled Username")
-		a.Username = getConfigVariable("AUTH_Username_Username")
-		a.Password = getConfigVariable("AUTH_Username_Password")
+		a.Username = config.AuthUsername
+		a.Password = config.AuthPassword
 	}
 
 	return a
@@ -108,8 +100,8 @@ func (a *auth) Handle(next http.Handler) http.Handler {
 
 		if a.Method == "Username" {
 			token := r.Header.Get("X-APITOKEN")
-			v, _ := a.Redis.get("auth_"+token)
-			if v  == "1" {
+			v, _ := a.Redis.get("auth_" + token)
+			if v == "1" {
 				next.ServeHTTP(w, r)
 				return
 			} else {
@@ -133,7 +125,6 @@ func (a *auth) httpBasicAuthUnauthorized(w http.ResponseWriter, realm string) {
 	w.WriteHeader(http.StatusUnauthorized)
 }
 
-
 func (a *auth) httpBasicAuthCheck(username string, password string) (ok bool, err error) {
 	ok = false //Just make clear that the default is false
 
@@ -149,7 +140,7 @@ func (a *auth) httpBasicAuthCheck(username string, password string) (ok bool, er
 
 /*
 	Call this function to create a valide token for api-keys
- */
+*/
 func (a *auth) createToken() (token string, e error) {
 	letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
@@ -172,10 +163,9 @@ type LoginData struct {
 }
 
 type LoginResult struct {
-	Login bool `json:"login"`
+	Login bool   `json:"login"`
 	Token string `json:"token"`
 }
-
 
 func loginUsername(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
@@ -203,10 +193,8 @@ func loginUsername(w http.ResponseWriter, r *http.Request) {
 func logout(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("X-APITOKEN")
 
-	authConfig.Redis.delete("auth_"+token)
+	authConfig.Redis.delete("auth_" + token)
 
 	w.WriteHeader(http.StatusUnauthorized)
 	//w.Write([]byte(""))
 }
-
-
