@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"embed"
 	"fmt"
 	"net/http"
 	"os"
@@ -28,9 +27,6 @@ var (
 )
 
 var db *sql.DB
-
-//go:embed templates/*.tmpl
-var embeddedTemplates embed.FS
 
 func init() {
 	// Config logger
@@ -202,15 +198,3 @@ func main() {
 
 	log.Debug().Msg("Done, Shotdown")
 }
-
-/*func test(w http.ResponseWriter, req *http.Request) {
-	r := render.New(render.Options{
-		Directory: "templates",
-		FileSystem: &render.EmbedFileSystem{
-			FS: embeddedTemplates,
-		},
-		Extensions: []string{".html", ".tmpl"},
-	})
-
-	r.HTML(w, http.StatusOK, "example", "world")
-}*/
