@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/rs/zerolog"
@@ -44,12 +47,12 @@ func NewMailServerConfiguratorInterface(config Config) *MailServerConfiguratorIn
 	return &MailServerConfiguratorInterface{Config: config, PasswordHashBuilder: hb}
 }
 
-func (m *MailServerConfiguratorInterface) connectToDb() {
+func (m *MailServerConfiguratorInterface) connectToDb() error {
 	log.Debug().Msg("Try to connect to Database")
 	db, err := sql.Open("mysql", m.Config.DatabaseURI)
 
 	if err != nil {
-		log.Fatal().Err(err).Msg("Can`t connect to db")
+		return err
 	}
 	m.DBConn = db
 
@@ -57,10 +60,11 @@ func (m *MailServerConfiguratorInterface) connectToDb() {
 
 	err = db.Ping()
 	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
+		return err
 	}
 
 	log.Debug().Msg("Connection to Database ok")
+	return nil
 }
 
 func http_ping(w http.ResponseWriter, r *http.Request) {
@@ -79,18 +83,15 @@ func (m *MailServerConfiguratorInterface) http_status(w http.ResponseWriter, r *
 
 var authConfig auth
 
-func defineRouter(config Config) chi.Router {
+func defineRouter(m *MailServerConfiguratorInterface) chi.Router {
 	log.Debug().Msg("Setup API-Routen")
 	r := chi.NewRouter()
 
-	m := NewMailServerConfiguratorInterface(config)
-	m.connectToDb()
-
-	if config.V3Config {
+	if m.Config.V3Config {
 		log.Info().Msgf("Run with v3 config")
 	} else {
-		redis := newRedisConnection(config)
-		authConfig = NewAuthFromEnv(redis, config)
+		redis := newRedisConnection(m.Config)
+		authConfig = NewAuthFromEnv(redis, m.Config)
 	}
 
 	cors := cors.New(cors.Options{
@@ -110,7 +111,7 @@ func defineRouter(config Config) chi.Router {
 	r.Use(middleware.Recoverer)
 
 	apiRouten := chi.NewRouter()
-	if config.V3Config {
+	if m.Config.V3Config {
 		apiRouten.Use(jwtauth.Verifier(tokenAuth))
 		apiRouten.Use(jwtauth.Authenticator)
 	} else {
@@ -143,7 +144,7 @@ func defineRouter(config Config) chi.Router {
 
 	publicRouten := chi.NewRouter()
 
-	if config.V3Config {
+	if m.Config.V3Config {
 		publicRouten.Post("/v1/login", m.login)
 		publicRouten.Post("/v1/login/username", m.login) //Old route for old frontend, need to be removed
 	} else {
@@ -173,11 +174,31 @@ func main() {
 	log.Info().Msgf("Running version %v", version)
 
 	config := NewConfig()
-
-	router := defineRouter(config)
-	err := http.ListenAndServe(fmt.Sprintf("%s:%d", config.Address, config.Port), router)
+	m := NewMailServerConfiguratorInterface(config)
+	err := m.connectToDb()
 	if err != nil {
-		log.Error().Err(err).Msg("HTTP Server stop")
+		log.Fatal().Err(err).Msg("unable to connect to db")
+	}
+
+	defer m.DBConn.Close()
+
+	router := defineRouter(m)
+
+	srv := http.Server{Addr: fmt.Sprintf("%s:%d", config.Address, config.Port), Handler: router}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Error().Err(err).Msg("unable to start HTTP Server")
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal().Err(err).Msg("unable to stop http server")
 	}
 
 	log.Debug().Msg("Done, Shotdown")
