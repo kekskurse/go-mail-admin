@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/go-chi/jwtauth/v5"
@@ -33,6 +34,16 @@ type Config struct {
 	DkimValue    string
 }
 
+func parseBool(str string) (bool, error) {
+	switch str {
+	case "1", "t", "T", "true", "TRUE", "True", "on", "On":
+		return true, nil
+	case "0", "f", "F", "false", "FALSE", "False", "off", "Off":
+		return false, nil
+	}
+	return false, fmt.Errorf("unable to parse '%s' to boolean", str)
+}
+
 func NewConfig() Config {
 	config := Config{}
 	config.PasswordScheme = getConfigVariableWithDefault("PASSWORD_SCHEME", "SSHA512")
@@ -43,9 +54,13 @@ func NewConfig() Config {
 	config.Port = uint16(port)
 	config.Address = getConfigVariableWithDefault("ADDRESS", "localhost")
 
-	config.V3Config = false
-	if getConfigVariableWithDefault("V3", "off") == "on" {
-		config.V3Config = true
+	v3Config, err := parseBool(getConfigVariableWithDefault("V3", "off"))
+	if err != nil {
+		log.Fatal().Err(err).Msgf("invalid value for GOMAILADMIN_V3")
+	}
+	config.V3Config = v3Config
+
+	if config.V3Config {
 		config.AuthUsername = getConfigVariable("AUTH_Username")
 
 		if config.AuthUsername == "" {
@@ -61,22 +76,28 @@ func NewConfig() Config {
 		config.FeatureToggles.AuthMethode = authConfig.Method
 	}
 
-	if getConfigVariableWithDefault("CATCHALL", "On") == "On" {
-		config.FeatureToggles.CatchAll = true
+	catchAll, err := parseBool(getConfigVariableWithDefault("CATCHALL", "On"))
+	if err != nil {
+		log.Fatal().Err(err).Msgf("invalid value for GOMAILADMIN_CATCHALL")
 	}
+	config.FeatureToggles.CatchAll = catchAll
 
-	if getConfigVariableWithDefault("SHOW_DNS_RECORDS", "On") == "On" {
-		config.FeatureToggles.ShowDomainRecords = true
+	showDomainRecords, err := parseBool(getConfigVariableWithDefault("SHOW_DNS_RECORDS", "On"))
+	if err != nil {
+		log.Fatal().Err(err).Msgf("invalid value for GOMAILADMIN_SHOW_DNS_RECORDS")
 	}
+	config.FeatureToggles.ShowDomainRecords = showDomainRecords
 
 	config.DatabaseURI = getConfigVariable("DB")
 	if config.DatabaseURI == "" {
 		log.Fatal().Msg("No DB Connection string set, set enviroment varieable GOMAILADMIN_DB")
 	}
 
-	if getConfigVariable("CHECK_DNS_RECORDS") == "On" {
-		config.CheckDnsRecords = true
+	checkDnsRecords, err := parseBool(getConfigVariableWithDefault("CHECK_DNS_RECORDS", "On"))
+	if err != nil {
+		log.Fatal().Err(err).Msgf("invalid value for GOMAILADMIN_CHECK_DNS_RECORDS")
 	}
+	config.CheckDnsRecords = checkDnsRecords
 
 	config.RedisNetwork = getConfigVariableWithDefault("REDIS_NETWORK", "tcp")
 	config.RedisAddress = getConfigVariableWithDefault("REDIS_ADDRESS", "localhost:6379")
