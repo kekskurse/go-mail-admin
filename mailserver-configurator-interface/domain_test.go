@@ -49,7 +49,7 @@ func TestAddInvalidDomain(t *testing.T) {
 	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(addDomain)
+	handler := http.HandlerFunc(m.addDomain)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusCreated {
@@ -68,7 +68,7 @@ func TestAddDomain(t *testing.T) {
 	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(addDomain)
+	handler := http.HandlerFunc(m.addDomain)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusCreated {
@@ -124,7 +124,7 @@ func TestDeleteNotExistingDomain(t *testing.T) {
 	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(deleteDomain)
+	handler := http.HandlerFunc(m.deleteDomain)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
@@ -143,7 +143,7 @@ func TestDeleteDomain(t *testing.T) {
 	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(deleteDomain)
+	handler := http.HandlerFunc(m.deleteDomain)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {

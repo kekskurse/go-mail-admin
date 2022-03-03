@@ -18,8 +18,8 @@ type TLSPolicy struct {
 	Params string `json:"params"`
 }
 
-func getTLSPolicy(w http.ResponseWriter, r *http.Request) {
-	result, err := db.Query("SELECT id, domain, policy, IFNULL(params, \"\") FROM tlspolicies ORDER BY id")
+func (m *MailServerConfiguratorInterface) getTLSPolicy(w http.ResponseWriter, r *http.Request) {
+	result, err := m.DBConn.Query("SELECT id, domain, policy, IFNULL(params, \"\") FROM tlspolicies ORDER BY id")
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error while query tls")
@@ -40,7 +40,7 @@ func getTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	ren.JSON(w, http.StatusOK, policys)
 }
 
-func addTLSPolicy(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) addTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -51,7 +51,7 @@ func addTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	var tlspolicy TLSPolicy
 	json.Unmarshal(body, &tlspolicy)
 
-	stmt, err := db.Prepare("INSERT INTO tlspolicies (`domain`, `policy`, `params`) VALUES(?, ?, ?)")
+	stmt, err := m.DBConn.Prepare("INSERT INTO tlspolicies (`domain`, `policy`, `params`) VALUES(?, ?, ?)")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -67,7 +67,7 @@ func addTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func updateTLSPolicy(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) updateTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -78,7 +78,7 @@ func updateTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	var policy TLSPolicy
 	json.Unmarshal(body, &policy)
 
-	stmt, err := db.Prepare("UPDATE tlspolicies SET domain = ?, policy = ?, params = ? WHERE id = ?")
+	stmt, err := m.DBConn.Prepare("UPDATE tlspolicies SET domain = ?, policy = ?, params = ? WHERE id = ?")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -93,7 +93,7 @@ func updateTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 }
-func deleteTLSPolicy(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) deleteTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -104,7 +104,7 @@ func deleteTLSPolicy(w http.ResponseWriter, r *http.Request) {
 	var policy TLSPolicy
 	json.Unmarshal(body, &policy)
 
-	stmt, err := db.Prepare("DELETE FROM tlspolicies WHERE id = ?")
+	stmt, err := m.DBConn.Prepare("DELETE FROM tlspolicies WHERE id = ?")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

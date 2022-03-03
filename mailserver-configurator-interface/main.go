@@ -26,8 +26,6 @@ var (
 	version = "development"
 )
 
-var db *sql.DB
-
 func init() {
 	// Config logger
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
@@ -41,7 +39,6 @@ type MailServerConfiguratorInterface struct {
 }
 
 func NewMailServerConfiguratorInterface(config Config) *MailServerConfiguratorInterface {
-
 	hb := password.GetPasswordHashBuilder(config.PasswordScheme)
 
 	return &MailServerConfiguratorInterface{Config: config, HashBuilder: hb}
@@ -49,12 +46,12 @@ func NewMailServerConfiguratorInterface(config Config) *MailServerConfiguratorIn
 
 func (m *MailServerConfiguratorInterface) connectToDb() {
 	log.Debug().Msg("Try to connect to Database")
-	var err error
-	db, err = sql.Open("mysql", m.Config.DatabaseURI)
+	db, err := sql.Open("mysql", m.Config.DatabaseURI)
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Can`t connect to db")
 	}
+	m.DBConn = db
 
 	log.Debug().Msg("Ping Database")
 
@@ -70,8 +67,8 @@ func http_ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Pong"))
 }
 
-func http_status(w http.ResponseWriter, r *http.Request) {
-	err := db.Ping()
+func (m *MailServerConfiguratorInterface) http_status(w http.ResponseWriter, r *http.Request) {
+	err := m.DBConn.Ping()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -123,25 +120,25 @@ func defineRouter(config Config) chi.Router {
 
 	apiRouten.Get("/v1/domain", m.getDomains)
 	apiRouten.Get("/v1/domain/{domain}", m.getDomainDetails)
-	apiRouten.Post("/v1/domain", addDomain)
-	apiRouten.Delete("/v1/domain", deleteDomain)
-	apiRouten.Get("/v1/alias", getAliases)
+	apiRouten.Post("/v1/domain", m.addDomain)
+	apiRouten.Delete("/v1/domain", m.deleteDomain)
+	apiRouten.Get("/v1/alias", m.getAliases)
 	apiRouten.Post("/v1/alias", m.addAlias)
-	apiRouten.Delete("/v1/alias", deleteAlias)
-	apiRouten.Put("/v1/alias", updateAlias)
-	apiRouten.Get("/v1/account", getAccounts)
+	apiRouten.Delete("/v1/alias", m.deleteAlias)
+	apiRouten.Put("/v1/alias", m.updateAlias)
+	apiRouten.Get("/v1/account", m.getAccounts)
 	apiRouten.Post("/v1/account", m.addAccount)
-	apiRouten.Delete("/v1/account", deleteAccount)
-	apiRouten.Put("/v1/account", updateAccount)
+	apiRouten.Delete("/v1/account", m.deleteAccount)
+	apiRouten.Put("/v1/account", m.updateAccount)
 	apiRouten.Put("/v1/account/password", m.updateAccountPassword)
-	apiRouten.Get("/v1/tlspolicy", getTLSPolicy)
-	apiRouten.Post("/v1/tlspolicy", addTLSPolicy)
-	apiRouten.Put("/v1/tlspolicy", updateTLSPolicy)
-	apiRouten.Delete("/v1/tlspolicy", deleteTLSPolicy)
+	apiRouten.Get("/v1/tlspolicy", m.getTLSPolicy)
+	apiRouten.Post("/v1/tlspolicy", m.addTLSPolicy)
+	apiRouten.Put("/v1/tlspolicy", m.updateTLSPolicy)
+	apiRouten.Delete("/v1/tlspolicy", m.deleteTLSPolicy)
 	apiRouten.Get("/v1/features", m.getFeatureToggles)
 	apiRouten.Get("/v1/version", getVersion)
 	r.Get("/ping", http_ping)
-	r.Get("/status", http_status)
+	r.Get("/status", m.http_status)
 	//r.Get("/test", test)
 
 	publicRouten := chi.NewRouter()

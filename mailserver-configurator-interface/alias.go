@@ -22,8 +22,8 @@ type Alias struct {
 	PrintDestination    string  `json:"print_destination"`
 }
 
-func getAliases(w http.ResponseWriter, r *http.Request) {
-	result, err := db.Query("SELECT id, source_username, source_domain, destination_username, destination_domain, enabled FROM aliases ORDER BY id")
+func (m *MailServerConfiguratorInterface) getAliases(w http.ResponseWriter, r *http.Request) {
+	result, err := m.DBConn.Query("SELECT id, source_username, source_domain, destination_username, destination_domain, enabled FROM aliases ORDER BY id")
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error execute Query for Aliases")
@@ -82,7 +82,7 @@ func (m *MailServerConfiguratorInterface) addAlias(w http.ResponseWriter, r *htt
 		}
 	}
 
-	stmt, err := db.Prepare("INSERT INTO aliases (`source_username`, `source_domain`, `destination_username`, `destination_domain`, `enabled`) VALUES(?, ?, ?, ?, ?)")
+	stmt, err := m.DBConn.Prepare("INSERT INTO aliases (`source_username`, `source_domain`, `destination_username`, `destination_domain`, `enabled`) VALUES(?, ?, ?, ?, ?)")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -97,7 +97,7 @@ func (m *MailServerConfiguratorInterface) addAlias(w http.ResponseWriter, r *htt
 	}
 	w.WriteHeader(http.StatusCreated)
 }
-func deleteAlias(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) deleteAlias(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -108,7 +108,7 @@ func deleteAlias(w http.ResponseWriter, r *http.Request) {
 	var alias Alias
 	json.Unmarshal(body, &alias)
 
-	stmt, err := db.Prepare("DELETE FROM aliases WHERE id = ?")
+	stmt, err := m.DBConn.Prepare("DELETE FROM aliases WHERE id = ?")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -123,7 +123,7 @@ func deleteAlias(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 }
-func updateAlias(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) updateAlias(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -134,7 +134,7 @@ func updateAlias(w http.ResponseWriter, r *http.Request) {
 	var alias Alias
 	json.Unmarshal(body, &alias)
 
-	stmt, err := db.Prepare("UPDATE aliases SET source_username = ?, source_domain = ?, destination_username = ?, destination_domain = ?, enabled = ? WHERE id = ?")
+	stmt, err := m.DBConn.Prepare("UPDATE aliases SET source_username = ?, source_domain = ?, destination_username = ?, destination_domain = ?, enabled = ? WHERE id = ?")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

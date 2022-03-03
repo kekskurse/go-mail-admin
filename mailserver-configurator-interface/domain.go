@@ -18,7 +18,7 @@ type Domain struct {
 }
 
 func (m *MailServerConfiguratorInterface) getDomains(w http.ResponseWriter, r *http.Request) {
-	result, err := db.Query("SELECT id, domain FROM domains ORDER BY id")
+	result, err := m.DBConn.Query("SELECT id, domain FROM domains ORDER BY id")
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error execute query for domain")
@@ -43,7 +43,7 @@ func (m *MailServerConfiguratorInterface) getDomains(w http.ResponseWriter, r *h
 	//json.NewEncoder(w).Encode(domains)
 }
 
-func addDomain(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) addDomain(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -60,7 +60,7 @@ func addDomain(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stmt, err := db.Prepare("INSERT INTO domains(domain) VALUES(?)")
+	stmt, err := m.DBConn.Prepare("INSERT INTO domains(domain) VALUES(?)")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -76,7 +76,7 @@ func addDomain(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func deleteDomain(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) deleteDomain(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -87,7 +87,7 @@ func deleteDomain(w http.ResponseWriter, r *http.Request) {
 	var domain Domain
 	json.Unmarshal(body, &domain)
 
-	stmt, err := db.Prepare("DELETE FROM domains WHERE domain = ?")
+	stmt, err := m.DBConn.Prepare("DELETE FROM domains WHERE domain = ?")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

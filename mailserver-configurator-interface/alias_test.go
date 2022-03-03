@@ -41,7 +41,7 @@ func TestAddAlias(t *testing.T) {
 	m := NewMailServerConfiguratorInterface(NewConfig())
 	m.connectToDb()
 
-	stmt, _ := db.Prepare("INSERT INTO domains(domain) VALUES(?)")
+	stmt, _ := m.DBConn.Prepare("INSERT INTO domains(domain) VALUES(?)")
 	_, _ = stmt.Exec("alias.com")
 
 	rr := httptest.NewRecorder()
@@ -66,7 +66,7 @@ func TestGetAliases(t *testing.T) {
 	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(getAliases)
+	handler := http.HandlerFunc(m.getAliases)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
@@ -118,7 +118,7 @@ func TestUpdateAliasWrongDomain(t *testing.T) {
 	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(updateAlias)
+	handler := http.HandlerFunc(m.updateAlias)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusInternalServerError {
@@ -138,11 +138,11 @@ func TestUpdateAlias(t *testing.T) {
 	m := NewMailServerConfiguratorInterface(NewConfig())
 	m.connectToDb()
 
-	stmt, _ := db.Prepare("INSERT INTO domains(domain) VALUES(?)")
+	stmt, _ := m.DBConn.Prepare("INSERT INTO domains(domain) VALUES(?)")
 	_, _ = stmt.Exec("alias.com")
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(updateAlias)
+	handler := http.HandlerFunc(m.updateAlias)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
@@ -163,7 +163,7 @@ func TestGetAliasesAfterUpdate(t *testing.T) {
 	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(getAliases)
+	handler := http.HandlerFunc(m.getAliases)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
@@ -211,7 +211,7 @@ func TestRemoveAlias(t *testing.T) {
 	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(deleteAlias)
+	handler := http.HandlerFunc(m.deleteAlias)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
@@ -232,7 +232,7 @@ func TestGetAliasesEmpty(t *testing.T) {
 	m.connectToDb()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(getAliases)
+	handler := http.HandlerFunc(m.getAliases)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {

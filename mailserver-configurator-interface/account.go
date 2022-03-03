@@ -34,8 +34,8 @@ type AccountWithPassword struct {
 	Print    string `json:"print"`
 }
 
-func getAccounts(w http.ResponseWriter, r *http.Request) {
-	result, err := db.Query("SELECT id, username, domain, password, quota, enabled, sendonly FROM accounts ORDER BY id")
+func (m *MailServerConfiguratorInterface) getAccounts(w http.ResponseWriter, r *http.Request) {
+	result, err := m.DBConn.Query("SELECT id, username, domain, password, quota, enabled, sendonly FROM accounts ORDER BY id")
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error execute query")
@@ -75,7 +75,7 @@ func (m *MailServerConfiguratorInterface) addAccount(w http.ResponseWriter, r *h
 		return
 	}
 
-	stmt, err := db.Prepare("INSERT INTO accounts (`username`, `domain`, `password`, `quota`, `enabled`, `sendonly`) VALUES(?, ?, ? ,? , ? , ?)")
+	stmt, err := m.DBConn.Prepare("INSERT INTO accounts (`username`, `domain`, `password`, `quota`, `enabled`, `sendonly`) VALUES(?, ?, ? ,? , ? , ?)")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -91,7 +91,7 @@ func (m *MailServerConfiguratorInterface) addAccount(w http.ResponseWriter, r *h
 	w.WriteHeader(http.StatusCreated)
 }
 
-func deleteAccount(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) deleteAccount(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -102,7 +102,7 @@ func deleteAccount(w http.ResponseWriter, r *http.Request) {
 	var account Account
 	json.Unmarshal(body, &account)
 
-	stmt, err := db.Prepare("DELETE FROM accounts WHERE id = ?")
+	stmt, err := m.DBConn.Prepare("DELETE FROM accounts WHERE id = ?")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -118,7 +118,7 @@ func deleteAccount(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func updateAccount(w http.ResponseWriter, r *http.Request) {
+func (m *MailServerConfiguratorInterface) updateAccount(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -129,7 +129,7 @@ func updateAccount(w http.ResponseWriter, r *http.Request) {
 	var account Account
 	json.Unmarshal(body, &account)
 
-	stmt, err := db.Prepare("UPDATE accounts SET quota = ?, enabled = ?, sendonly = ? WHERE id = ?")
+	stmt, err := m.DBConn.Prepare("UPDATE accounts SET quota = ?, enabled = ?, sendonly = ? WHERE id = ?")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -163,7 +163,7 @@ func (m *MailServerConfiguratorInterface) updateAccountPassword(w http.ResponseW
 		return
 	}
 
-	stmt, err := db.Prepare("UPDATE accounts SET password = ? WHERE id = ?")
+	stmt, err := m.DBConn.Prepare("UPDATE accounts SET password = ? WHERE id = ?")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
