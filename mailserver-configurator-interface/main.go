@@ -33,15 +33,15 @@ func init() {
 }
 
 type MailServerConfiguratorInterface struct {
-	DBConn      *sql.DB
-	Config      Config
-	HashBuilder password.PasswordHashBuilder
+	DBConn              *sql.DB
+	Config              Config
+	PasswordHashBuilder password.PasswordHashBuilder
 }
 
 func NewMailServerConfiguratorInterface(config Config) *MailServerConfiguratorInterface {
 	hb := password.GetPasswordHashBuilder(config.PasswordScheme)
 
-	return &MailServerConfiguratorInterface{Config: config, HashBuilder: hb}
+	return &MailServerConfiguratorInterface{Config: config, PasswordHashBuilder: hb}
 }
 
 func (m *MailServerConfiguratorInterface) connectToDb() {

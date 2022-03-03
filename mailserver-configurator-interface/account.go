@@ -68,7 +68,7 @@ func (m *MailServerConfiguratorInterface) addAccount(w http.ResponseWriter, r *h
 	var account AccountWithPassword
 	json.Unmarshal(body, &account)
 
-	pwHash, err := m.HashBuilder.Hash(account.Password)
+	pwHash, err := m.PasswordHashBuilder.Hash(account.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -156,7 +156,7 @@ func (m *MailServerConfiguratorInterface) updateAccountPassword(w http.ResponseW
 	var account AccountWithPassword
 	json.Unmarshal(body, &account)
 
-	pwHash, err := m.HashBuilder.Hash(account.Password)
+	pwHash, err := m.PasswordHashBuilder.Hash(account.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
