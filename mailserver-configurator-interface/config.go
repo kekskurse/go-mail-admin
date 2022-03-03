@@ -107,7 +107,7 @@ func NewConfig() Config {
 		log.Fatal().Msg("No DB Connection string set, set enviroment varieable GOMAILADMIN_DB")
 	}
 
-	checkDnsRecords, err := parseBool(getConfigVariableWithDefault("CHECK_DNS_RECORDS", "On"))
+	checkDnsRecords, err := parseBool(getConfigVariableWithDefault("CHECK_DNS_RECORDS", "off"))
 	if err != nil {
 		log.Fatal().Err(err).Msgf("invalid value for GOMAILADMIN_CHECK_DNS_RECORDS")
 	}
