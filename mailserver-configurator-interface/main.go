@@ -66,19 +66,6 @@ func (m *MailServerConfiguratorInterface) connectToDb() {
 	log.Debug().Msg("Connection to Database ok")
 }
 
-func getConfigVariable(name string) string {
-	value := os.Getenv("GOMAILADMIN_" + name)
-	return value
-}
-
-func getConfigVariableWithDefault(name string, defaultValue string) string {
-	value := getConfigVariable(name)
-	if value == "" {
-		return defaultValue
-	}
-	return value
-}
-
 func http_ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Pong"))
 }

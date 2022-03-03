@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/go-chi/jwtauth/v5"
@@ -32,6 +33,19 @@ type Config struct {
 
 	DkimSelector string
 	DkimValue    string
+}
+
+func getConfigVariable(name string) string {
+	value := os.Getenv("GOMAILADMIN_" + name)
+	return value
+}
+
+func getConfigVariableWithDefault(name string, defaultValue string) string {
+	value := getConfigVariable(name)
+	if value == "" {
+		return defaultValue
+	}
+	return value
 }
 
 func parseBool(str string) (bool, error) {
