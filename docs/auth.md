@@ -19,8 +19,22 @@ To Access the API or the Webfrontend a HTTP-Basic-Auth authorisation is requeste
 ## Username
 Access via Username/Password with the Webfronend.
 
-* GOMAILADMIN_AUTH_USERNAME_USERNAME -> Username
-* GOMAILADMIN_AUTH_USERNAME_PASSWORD -> Password
+Make sure to configure: 
+
+* `GOMAILADMIN_AUTH_METHOD=Username`
+* `GOMAILADMIN_AUTH_Username_Username` -> Set your username
+* `GOMAILADMIN_AUTH_Username_Password` -> Set your Password
+
+for example - in the systemd init file: 
+
+```
+...
+Environment="GOMAILADMIN_AUTH_METHOD=Username"
+Environment="GOMAILADMIN_AUTH_Username_Username=myusername"
+Environment="GOMAILADMIN_AUTH_Username_Password=mypassword"
+...
+```
+
 
 ## DontStart
 Just the default, the Project will stop with a panic.
